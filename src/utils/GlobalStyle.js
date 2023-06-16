@@ -12,7 +12,15 @@ export default StyleSheet.create({
     },
     Primary_Linear_p_font: {
         
-        color: '#8569F6'
+        color: '#4726B3'
+    },
+    Primary_Linear_p_button: {
+
+        buttonColor : '#4726B3'
+    },
+    Primary_Linear_p_background: {
+
+        backgroundColor : '#4726B3'
     },
     Primary_Linear_p_light_font: {
         

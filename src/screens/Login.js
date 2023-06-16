@@ -3,6 +3,7 @@ import React , { useState } from 'react';
 import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button} from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -14,8 +15,36 @@ export default function Login() {
     const handleCreatAccountPress = () => {
         navigation.navigate('Logging');
     };
-    const handleLoggingPress = () => {
-        navigation.getParent().navigate('FunctionScreens');
+
+    const handleLoggingPress = async()=> {
+        const savedAccount = await AsyncStorage.getItem('accounts');
+        console.log('I am save');
+        console.log(savedAccount);
+        const parsedAccount = JSON.parse(savedAccount);
+        //console.log('尚未有帳號密碼的頁面');
+        if (parsedAccount.find((account) => account.username === username  &&
+        parsedAccount.find((account) => account.password === password)) )
+        {
+            navigation.getParent().navigate('Loading');
+        }
+        else{
+            navigation.navigate('TutorialScreens'); // Error Page
+        }
+        //navigation.navigate('Loading');
+    };
+
+    const handleUsernameChange = (text) => {
+        setUsername(text);
+    };
+    
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+    //log out 還沒寫，應該要寫在setting 那裡
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setUsername('');
+        setPassword('');
     };
 
     return (
@@ -28,12 +57,12 @@ export default function Login() {
 
             <View style = {styles.button_set}>
                 <Text style={styles.button_name}>Username</Text>
-                <TextInput style={styles.button} >
+                <TextInput style={styles.button} value={username} onChangeText={handleUsernameChange}>
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
                
-                <Text style={styles.button_name}>Password</Text>
-                <TextInput style={styles.button} >
+                <Text style={styles.button_name} >Password</Text>
+                <TextInput style={styles.button} value={password} onChangeText={handlePasswordChange} secureTextEntry={true}>
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
             </View>

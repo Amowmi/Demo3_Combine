@@ -13,13 +13,13 @@ const SelectMode = (props) => (
 
 const styles = StyleSheet.create({
     button:{
-      margin: 0,
       justifyContent: 'center',
       height: 25,
       width: 60,
       backgroundColor: '#FFFFFF',
       alignItems: 'center',
       borderRadius: 20,
+      marginRight: 8
     },
     text:{
         fontSize: 12, 

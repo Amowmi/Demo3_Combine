@@ -28,6 +28,7 @@
     "@expo/webpack-config": "^18.0.1",
     "@expo-google-fonts/raleway": "^0.2.3",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/drawer": "^6.6.2",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-reanimated": "~2.14.4",
@@ -36,7 +37,13 @@
     "react-native-vector-icons": "^9.2.0",
     "react-redux": "^8.1.0",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "@react-native-async-storage/async-storage": "^1.18.2",
+    "expo-linking": "~4.0.1",
+    "react-native-image-zoom": "^0.32.0",
+    "react-native-raw-bottom-sheet": "^2.2.0",
+    "rn-range-slider": "^2.2.2"
+
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

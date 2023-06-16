@@ -1,7 +1,8 @@
 import React from 'react';
 import GlobalStyle from '../../utils/GlobalStyle';
 import SelectMode from './Icons/SelectMode';
-import BackButton from './Icons/BackButton';
+import BackButton from '../Edit/backButton';
+
 
 import {
     StyleSheet,
@@ -17,7 +18,7 @@ const PreviewHeader = (props) => {
             <View style={styles.header}>
                 <View style={[styles.fullW, GlobalStyle.Primary_Linear_p]}>
                     <View style={styles.headerPurple}>
-                        <BackButton PressHandler = {props.PressHandler_back}/>
+                        <BackButton style={{width: 60}} onPress={props.PressHandler_back}/>
                         <Text style={styles.textPurple}>
                             Model
                         </Text>
@@ -55,7 +56,8 @@ const styles = StyleSheet.create({
         width:'95%',
         height: 91,
         paddingTop: 45,
-        justifyContent: 'flex-end',
+        marginLeft: 20.5,
+        justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
     },
@@ -65,13 +67,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
+        
         flexDirection: 'row'
     },
     textPurple:{
         fontSize: 24,
         fontWeight:'bold',
         color:'#ffffff',
-        marginRight: 80
+        //marginRight: 80
     },
     textWhite:{
         fontSize:  35,

@@ -3,20 +3,67 @@ import React , { useState } from 'react';
 import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button} from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Logging() {
+    const [accounts, setAccounts] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
  
     const navigation = useNavigation();
 
-    const handleCreatAccountPress = () => {
-        navigation.navigate('StartPage');
+    const handleUsernameChange = (text) => {
+        setUsername(text);
     };
+    
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+
+    const handleCreatAccountPress = async () => {
+
+        const existingAccount = accounts.find(
+            (account) => account.username === username
+        );
+        if (existingAccount) {
+        console.log('帳號已存在');
+        return;
+        }
+        // 將新帳號加入帳號陣列
+        const temp = accounts;
+        temp.push({username: username, password: password })
+        setAccounts(temp);
+
+        // 清空輸入框
+        setUsername('');
+        setPassword('');
+
+        try {
+            await AsyncStorage.setItem('accounts', JSON.stringify(accounts));
+            navigation.navigate('StartPage');
+        } 
+        catch (error) {
+        console.log('存儲帳號失敗:', error);
+        }
+        // try {
+        //     await AsyncStorage.setItem('username', username);
+        //     await AsyncStorage.setItem('password', password);
+        //     //console.log(password);
+        //     navigation.navigate('StartPage');
+        // }
+        // catch (error) {
+        //     console.log('存儲數據失敗:', error);
+        // }
+        
+    };
+
     const handleLoggingPress = () => {
-        navigation.navigate('Loading');
+        navigation.navigate('Login');
     };
+    /*
+    
+    */
 
     return (
         <View style = {styles.backgroundColor}>
@@ -26,9 +73,9 @@ export default function Logging() {
             <Text style = {styles.title}>Welcome to wallistic!</Text>
             <Text style = {styles.subtitle1}>Create an account  {'\n'}to preview wallpapers!</Text>
 
-            <View style = {styles.button_set}>
+            <View style = {styles.button_set} >
                 <Text style={styles.button_name}>Username</Text>
-                <TextInput style={styles.button} >
+                <TextInput style={styles.button} value={accounts.username}  onChangeText={handleUsernameChange}>
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
                 <Text style={styles.button_name}>E-mail</Text>
@@ -36,7 +83,7 @@ export default function Logging() {
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
                 <Text style={styles.button_name}>Password</Text>
-                <TextInput style={styles.button} >
+                <TextInput style={styles.button} value={accounts.password} onChangeText={handlePasswordChange}  secureTextEntry={true}>
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
                 <Text style={styles.button_name}>Password again</Text>
