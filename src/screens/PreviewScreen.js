@@ -9,24 +9,31 @@ import { Pressable } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 
+import { useDispatch } from 'react-redux';
+import {setPreviewMode} from '../actions/Actions'
+//import { useSelector } from 'react-redux';
+
 export default function PreviewScreen(){
+
+  const dispatch = useDispatch();
+  //const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+
   const navigation = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState('Home');
   const OnSelectPress = () =>{
     setIsOpen(!isOpen);
   };
   const onOriginalPress = () => {
     setIsOpen(!isOpen);
-    setMode('Original');
+    dispatch(setPreviewMode('Original'));
   };
   const onHomePress = () => {
     setIsOpen(!isOpen);
-    setMode('Home');
+    dispatch(setPreviewMode('Home'))
   };
   const onLockPress = () => {
     setIsOpen(!isOpen);
-    setMode('Lock');
+    dispatch(setPreviewMode('Lock'))
   };
 
   const navigateHandler_edit = () => {
@@ -68,7 +75,7 @@ export default function PreviewScreen(){
 
       </Modal>
       <View style={styles.container}>
-        <PreviewHeader PressHandler_select={OnSelectPress} PressHandler_back={navigateHandler_back} Mode={mode} />
+        <PreviewHeader PressHandler_select={OnSelectPress} PressHandler_back={navigateHandler_back} />
         <SafeAreaView style={styles.scrollView}>
           <Pressable  /* Temporary Button to Edit */ 
             onPress={navigateHandler_edit}
@@ -78,7 +85,7 @@ export default function PreviewScreen(){
             </Text>
           </Pressable>
           <FlatList data={CARD} numColumns={2} key={'_'} ListFooterComponent={() => <Button title='ADD'></Button>}
-                    renderItem={({item}) => <Card Mode={mode} URL={item.cardURL}/>} />
+                    renderItem={({item}) => <Card URL={item.cardURL}/>} />
           
         </SafeAreaView>
       </View>

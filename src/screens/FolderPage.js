@@ -5,15 +5,48 @@ import  ItemLList from '../components/ItemList';
 import GlobalStyle from '../utils/GlobalStyle'
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
-const DATA = [
-    {id:3},{id:4},{id:5},{id:0}
-  ];
+// const DATA = [
+//     {id:3},{id:4},{id:5},{id:0}
+//   ];
+
+const divdeToList = (folderList)=>{
+    var DividedList = [];
+    var len =  folderList.length; 
+
+    var listnums = (len-len%6)/6;
+    var listremain = len % 6;
+    for(var i = 0; i < listnums; i++){
+        var temp = [];
+        for (var j = 0; j < 6; j++){
+            temp.push(folderList[i*6+j]);
+        }
+        DividedList.push(temp)
+    }
+    if(listremain){
+        var temp2 = [];
+        for(var i=0;i<listremain;i++){
+            temp2.push(folderList[listnums*6+i]);
+        }
+        temp2.push({id: -1,});
+        DividedList.push(temp2);
+    }
+    else{
+        DividedList.push([{id: -1,}]);
+    }
+    console.log(DividedList);
+    return DividedList;
+}
 const isDarkMode = true;
 
-
-
 const FolderPage   = ()=>{
+    
+
+    const {currentFolder,folderList,folderHasMore,folderLoading,} = useSelector(state => state.Folder);
+
+    const DATA = divdeToList(folderList);
+
     const navigation = useNavigation();
     const showToast = () => {
         Toast.show({
@@ -75,7 +108,7 @@ const FolderPage   = ()=>{
             <SafeAreaView style={styles.files}>
                 <FlatList
                     data={DATA}
-                    renderItem={({item}) => <  ItemLList data={DATA} id={item.id} PressHandler = {OnAddPress}/>}
+                    renderItem={({item}) => { <  ItemLList data={item} PressHandler = {OnAddPress}/>}}
                     showsHorizontalScrollIndicator={false}
                 />
                 
@@ -149,6 +182,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         backgroundColor: isDarkMode ? '#636363':'#FFFFFF',
+        
         borderRadius:12
     },
     files:{

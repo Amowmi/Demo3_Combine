@@ -23,16 +23,7 @@ export default function FolderBox() {
         <Stack.Navigator  initialRouteName="FolderPage">
           <Stack.Screen name="FolderPage" component={FolderPage} options={{headerShown: true,}}/>
           <Stack.Screen name='PreviewScreen' component={PreviewScreen} options={{headerShown: false}}/>
-          <Stack.Screen
-            name='EditingScreen'
-            component={EditingScreen}
-            options={{ 
-              title: '...', 
-              headerShown:false,
-            }}
-
-          />
-
+          <Stack.Screen name='EditingScreen' component={EditingScreen} options={{ title: '...', headerShown:false,}}/>
         </Stack.Navigator>
     </PaperProvider>
   );

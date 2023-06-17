@@ -2,7 +2,7 @@ import React from 'react';
 import GlobalStyle from '../../utils/GlobalStyle';
 import SelectMode from './Icons/SelectMode';
 import BackButton from '../Edit/backButton';
-
+import { useSelector } from 'react-redux';
 
 import {
     StyleSheet,
@@ -13,6 +13,7 @@ import {
 
 
 const PreviewHeader = (props) => {
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
         return (
 
             <View style={styles.header}>
@@ -22,19 +23,19 @@ const PreviewHeader = (props) => {
                         <Text style={styles.textPurple}>
                             Model
                         </Text>
-                        <SelectMode PressHandler = {props.PressHandler_select} Mode={props.Mode}/>
+                        <SelectMode PressHandler = {props.PressHandler_select}/>
 
                     </View>
                 </View>
                 
                 <View style={styles.headerWhite}>
-                    <Text style={props.Mode=='Original'? styles.textWhiteFocus : styles.textWhite}>
+                    <Text style={previewMode=='Original'? styles.textWhiteFocus : styles.textWhite}>
                         .
                     </Text>
-                    <Text style={props.Mode=='Home'? styles.textWhiteFocus : styles.textWhite}>
+                    <Text style={previewMode=='Home'? styles.textWhiteFocus : styles.textWhite}>
                         .
                     </Text>
-                    <Text style={props.Mode=='Lock'? styles.textWhiteFocus : styles.textWhite}>
+                    <Text style={previewMode=='Lock'? styles.textWhiteFocus : styles.textWhite}>
                         .
                     </Text>
                 </View>

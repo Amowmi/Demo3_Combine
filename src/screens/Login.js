@@ -4,13 +4,18 @@ import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button} fr
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setUserName } from '../actions/Actions';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
  
     const navigation = useNavigation();
+
+    const dispatch = useDispatch();
 
     const handleCreatAccountPress = () => {
         navigation.navigate('Logging');
@@ -25,6 +30,7 @@ export default function Login() {
         if (parsedAccount.find((account) => account.username === username  &&
         parsedAccount.find((account) => account.password === password)) )
         {
+            dispatch(setUserName(username));
             navigation.getParent().navigate('Loading');
         }
         else{

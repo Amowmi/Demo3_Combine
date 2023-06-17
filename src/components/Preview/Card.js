@@ -4,17 +4,20 @@ import { PaperProvider } from 'react-native-paper';
 import GlobalStyle from '../../utils/GlobalStyle';
 import Heart from './Icons/Heart';
 import Share from './Icons/Share';
+import { useSelector } from 'react-redux';
 
 const Card = (props) => {
+    
+  const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     return (
       <PaperProvider>
         <View style={styles.view}>
           <View>
-            <Image style={props.Mode=='Lock'? styles.tinyLogoOverlayL : styles.invisible}
+            <Image style={previewMode=='Lock'? styles.tinyLogoOverlayL : styles.invisible}
                     source={require('../../../assets/img/lock.png')}>
 
             </Image>
-            <Image style={props.Mode=='Home'? styles.tinyLogoOverlay : styles.invisible}
+            <Image style={previewMode=='Home'? styles.tinyLogoOverlay : styles.invisible}
                     source={require('../../../assets/img/home.png')}>
 
             </Image>

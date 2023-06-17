@@ -5,9 +5,9 @@ import GlobalStyle from '../utils/GlobalStyle'
 
 const FolderItem   = (props)=>{
 
-    const image = require('../../assets/FolderImage/sample.jpg');
-    const floderName = 'Favorites'
-    if(props.islast==true){
+    const image = props.data.image;
+    const floderName = props.data.name;
+    if(props.data.id==-1){
         return(
             <TouchableOpacity
             style={[styles.container,styles.add]}
@@ -24,7 +24,7 @@ const FolderItem   = (props)=>{
             >
             <View style={styles.container}>
     
-                <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                <ImageBackground source={{uri: image}} resizeMode="cover" style={styles.image}>
                     <Text style={[GlobalStyle.Primary_Linear_p,
                                 styles.text]}>
                             {floderName}

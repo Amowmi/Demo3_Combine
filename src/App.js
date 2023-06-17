@@ -4,7 +4,8 @@ import  {createStackNavigator} from '@react-navigation/stack';
 import FunctionScreens from './screens/EntryPoints/FunctionScreens';
 import Log_and_Tuto from './screens/EntryPoints/Log_and_Tuto';
 import TutorialScreens from './screens/EntryPoints/TutorialScreens';
-
+import {Provider} from 'react-redux'
+import {Store} from './store/store'
 
 
 import Toast from 'react-native-toast-message';
@@ -40,39 +41,43 @@ const LightTheme = {
 };
 export default function App() {
   return (
-    <>
-    <NavigationContainer theme={isDarkMode ? DarkTheme :LightTheme } >
+      <Provider store={Store}>
+
+      
+      <>
+      <NavigationContainer theme={isDarkMode ? DarkTheme :LightTheme } >
 
 
-        <Stack.Navigator initialRouteName="loginScreens" >
-            <Stack.Screen
-              options={{headerShown: false,}}
-              name = 'loginScreens'
-              component = {Log_and_Tuto}
-              >
-            </Stack.Screen>
-            <Stack.Screen
-              options={{headerShown: false,}}
-              name = 'FunctionScreens'
-              component = {FunctionScreens}
-              >
-            </Stack.Screen>
-            <Stack.Screen
-              options={{headerShown: false,}}
-              name = 'TutorialScreens'
-              component = {TutorialScreens}
-              >
-            </Stack.Screen>
+          <Stack.Navigator initialRouteName="loginScreens" >
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'loginScreens'
+                component = {Log_and_Tuto}
+                >
+              </Stack.Screen>
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'FunctionScreens'
+                component = {FunctionScreens}
+                >
+              </Stack.Screen>
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'TutorialScreens'
+                component = {TutorialScreens}
+                >
+              </Stack.Screen>
 
 
 
+          
+          </Stack.Navigator>
         
-        </Stack.Navigator>
-      
-    </NavigationContainer>
-    <Toast />
-    </>
-      
+      </NavigationContainer>
+      <Toast />
+      </>
+
+      </Provider>
   );
 }
 

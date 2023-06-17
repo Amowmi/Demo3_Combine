@@ -41,7 +41,7 @@ export default function Logging() {
 
         try {
             await AsyncStorage.setItem('accounts', JSON.stringify(accounts));
-            navigation.navigate('StartPage');
+            navigation.navigate('Login');
         } 
         catch (error) {
         console.log('存儲帳號失敗:', error);

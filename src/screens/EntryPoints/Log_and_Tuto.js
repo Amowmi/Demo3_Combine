@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 Stack = createStackNavigator();
 export default function Log_and_Tuto() {
-  
     return (
     
       

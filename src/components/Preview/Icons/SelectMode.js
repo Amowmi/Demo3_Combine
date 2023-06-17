@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { StyleSheet, Image, Text, TouchableHighlight } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 
-
-const SelectMode = (props) => (
-    < TouchableHighlight style={styles.button}
-            onPress={()=>{props.PressHandler();}}>
-        <Text style={styles.text}>{props.Mode}</Text>
+function SelectMode(props) {
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+  return(
+        < TouchableHighlight style={styles.button}
+        onPress={()=>{props.PressHandler();}}>
+    <Text style={styles.text}>{previewMode}</Text>
     </ TouchableHighlight>
-);
+  )
+    
+};
 
 const styles = StyleSheet.create({
     button:{

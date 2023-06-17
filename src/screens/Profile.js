@@ -2,11 +2,15 @@ import React from 'react';import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, Text, View, Button, Image, Pressable } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import GlobalStyle from '../utils/GlobalStyle';
+import { useSelector } from 'react-redux';
 
 const totalPins=120;
 
 const Profile = () => {
-    return(
+    
+  const userName = useSelector(state => state.userName);
+  
+  return(
         <View style={styles.container}>
            <Text style={[
                 GlobalStyle.Global_title,
@@ -30,7 +34,7 @@ const Profile = () => {
                         <Text style={[GlobalStyle.Primary_Linear_p_font,styles.tableTitle]}>Name</Text>
                     </DataTable.Cell>
                     <DataTable.Cell style={{flex: 9}}>
-                        <Text style={styles.tableText}>Penpen</Text>
+                        <Text style={styles.tableText}>{userName}</Text>
                     </DataTable.Cell>
                 </DataTable.Row>
                 <DataTable.Row style={styles.row}>

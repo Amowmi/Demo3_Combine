@@ -7,6 +7,8 @@ import Edit_Header from '../components/Edit/backButton';
 import Slider from '@react-native-community/slider';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
+import { useSelector } from 'react-redux';
+
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -40,6 +42,9 @@ export default function RotationScreen(props){
     const [rotate_deg, setRotation] = useState(0);
     const [value, setValue] = React.useState(0);
     const [ColorValue, setColorValue] = React.useState(0);
+
+    // state
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     
 
     //pinch
@@ -139,6 +144,12 @@ export default function RotationScreen(props){
     return(
       <View style={{ flex: 1, justifyContent: 'center'}}>
             <View style={styles.Container}>
+            <Image style={previewMode=='Home'? styles.imageOverlayH: styles.invisible} 
+                    source={require('../../assets/img/home.png')}>
+            </Image>
+            <Image style={previewMode=='Lock'? styles.imageOverlayL: styles.invisible}
+                    source={require('../../assets/img/lock.png')}>
+            </Image>
               <View style={styles.header}>
                 <Edit_Header onPress={() => 
                   navigation.navigate('PreviewScreen')}/* Back Button */  />  
@@ -355,6 +366,7 @@ export default function RotationScreen(props){
         marginBottom: 10
     },
     AllImgImageCard: {
+      zIndex: 1,
       flex: 1,
       width: '100%',
       height: '100%'
@@ -543,6 +555,27 @@ export default function RotationScreen(props){
         flexShrink: 1,
         flexBasis: 0,
       },
+      imageOverlayH: {
+        position:'absolute',
+        top:-47,
+        zIndex: 2,
+        width: 320.75,
+        height: 692,
+        resizeMode: 'contain',
+        borderRadius: 30,
+      },
+      imageOverlayL: {
+        position:'absolute',
+        top:0,
+        zIndex: 3,
+        width: 320.75,
+        height: 692,
+        resizeMode: 'contain',
+        borderRadius: 30,
+      },
+      invisible: {
+        opacity: 0,
+      }
   });
 
   /*
