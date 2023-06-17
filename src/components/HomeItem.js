@@ -12,7 +12,7 @@ const HomeItem = (props) => {
     const dispatch = useDispatch();
     const navigateHandler_edit = () => {
         dispatch(setCurPreview(props.URL));
-        navigation.getParent().navigate('EditingScreen');
+        navigation.getParent().getParent().navigate('FolderBox', {screen: 'EditingScreen'});
       };
 
     return(

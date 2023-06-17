@@ -51,11 +51,13 @@ const Card = (props) => {
                     source={require('../../../assets/img/home.png')}>
 
             </Image>
+            <View style={styles.frame}>
             <View ref={viewRef}>
             <Image
               style={styles.tinyLogo}
               source={{uri: props.URL}}
             />
+            </View>
             </View>
             <View style={styles.imageDescription}>
               <Text style={[styles.imageDescriptionText, isDarkMode? GlobalStyle.Surface_dark_font:GlobalStyle.Primary_Linear_p_font]}> 2023 / 06 / 14    </Text>
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: 166.43,
     height: 360,
-    margin: 8,
+    marginBottom: 8,
     borderWidth:1,
     borderBottomWidth:0,
     borderColor: '#BBB',
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   imageDescription: {
     width: 166.28,
     height: 30,
-    margin: 8,
+    marginBottom: 8,
     marginTop: 0,
     borderColor: '#BBB',
     borderWidth: 0.5,
@@ -168,6 +170,9 @@ const styles = StyleSheet.create({
     fontSize: 7,
     paddingTop:9,
     paddingLeft: 4 
+  },
+  frame:{
+    marginTop:8,
   }
 });
 
