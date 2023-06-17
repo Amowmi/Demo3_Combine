@@ -11,13 +11,21 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
 import {setPreviewMode} from '../actions/Actions'
-//import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import Dialog from 'react-native-paper';
+import Icon_Button from '../components/Edit/IconButton';
+
 
 export default function PreviewScreen(){
+ 
 
   const dispatch = useDispatch();
-  //const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+  const currentFolder = useSelector(state => state.Folder.currentFolder);
+  const CARD = useSelector(state => state.Preview.previewList[currentFolder]);
 
+
+  const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+  //const {isDarkMode,previewMode} = useSelector(state => state.Preview.previewList[]);
   const navigation = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
   const OnSelectPress = () =>{
@@ -37,21 +45,28 @@ export default function PreviewScreen(){
   };
 
   const navigateHandler_edit = () => {
+
     navigation.navigate('EditingScreen');
   };
   const navigateHandler_back = () => {
     navigation.navigate('FolderPage');
   };
 
+  const addImgHandler = () => {
+    
+  };
 
-  const CARD = [{cardIndex : '0', cardURL : 'https://i.pinimg.com/564x/89/5c/8c/895c8cb5f0c7fa326169d0ce51759b46.jpg'},
-                {cardIndex : '1', cardURL : 'https://i.pinimg.com/564x/bd/45/26/bd452671542fdcee8ae641a7be5c5cb1.jpg'},
-                {cardIndex : '2', cardURL : 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},
-                {cardIndex : '3', cardURL : 'https://i.pinimg.com/564x/5c/17/50/5c175030707be929f1bb79d032725da6.jpg'},
-                {cardIndex : '4', cardURL : 'https://i.pinimg.com/564x/f1/50/f6/f150f6e236de0506f009be91f1896013.jpg'},
-                {cardIndex : '5', cardURL : 'https://i.pinimg.com/564x/78/1c/45/781c4575dfd4c2781c3ff4c38d7418a8.jpg'},
-                {cardIndex : '6', cardURL : 'https://i.pinimg.com/564x/83/ee/85/83ee85e48293da7db203cb336a34e061.jpg'},
-                {cardIndex : '7', cardURL : 'https://i.pinimg.com/564x/4b/58/f3/4b58f34182fdabf1e38f660d0ba20498.jpg'}];
+
+  // const CARD = [{cardIndex : '0', cardURL : 'https://i.pinimg.com/564x/89/5c/8c/895c8cb5f0c7fa326169d0ce51759b46.jpg'},
+  //               {cardIndex : '1', cardURL : 'https://i.pinimg.com/564x/bd/45/26/bd452671542fdcee8ae641a7be5c5cb1.jpg'},
+  //               {cardIndex : '2', cardURL : 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},
+  //               {cardIndex : '3', cardURL : 'https://i.pinimg.com/564x/5c/17/50/5c175030707be929f1bb79d032725da6.jpg'},
+  //               {cardIndex : '4', cardURL : 'https://i.pinimg.com/564x/f1/50/f6/f150f6e236de0506f009be91f1896013.jpg'},
+  //               {cardIndex : '5', cardURL : 'https://i.pinimg.com/564x/78/1c/45/781c4575dfd4c2781c3ff4c38d7418a8.jpg'},
+  //               {cardIndex : '6', cardURL : 'https://i.pinimg.com/564x/83/ee/85/83ee85e48293da7db203cb336a34e061.jpg'},
+  //               {cardIndex : '7', cardURL : 'https://i.pinimg.com/564x/4b/58/f3/4b58f34182fdabf1e38f660d0ba20498.jpg'}];
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [inputText, setInputText] = useState('');
 
     return(
       <View style={{height: '100%'}}>
@@ -77,17 +92,20 @@ export default function PreviewScreen(){
       <View style={styles.container}>
         <PreviewHeader PressHandler_select={OnSelectPress} PressHandler_back={navigateHandler_back} />
         <SafeAreaView style={styles.scrollView}>
-          <Pressable  /* Temporary Button to Edit */ 
-            onPress={navigateHandler_edit}
-            style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
-            ><Text>
-            Go to Edit Screen
-            </Text>
-          </Pressable>
-          <FlatList data={CARD} numColumns={2} key={'_'} ListFooterComponent={() => <Button title='ADD'></Button>}
-                    renderItem={({item}) => <Card URL={item.cardURL}/>} />
-          
+
+          <FlatList 
+            keyExtractor={(item,cardURL)=>cardURL}
+            data={CARD} numColumns={2}  
+            columnWrapperStyle={{justifyContent:'space-between', paddingHorizontal:20}}
+            renderItem={({item}) => <Card URL={item.URL} loved={item.loved} folder={currentFolder}  style={{flex: 0.5}}/> } />
         </SafeAreaView>
+        <View style={styles.plus}>
+              <Icon_Button
+              onPressFunction={addImgHandler}
+              iconColor={'#8569F6'}
+              iconChoice={'plus'}
+              />
+            </View>
       </View>
         </View>
         
@@ -145,6 +163,11 @@ const styles = StyleSheet.create({
     },
     buttonfont: {
       color: '#ffffff'
+    },
+    plus: {
+      justifyContent:'center',
+      alignItems:'center',
+      height:60,
     },
     
   });

@@ -32,8 +32,8 @@ export function favorite(state = [], action) {
 
 /* Folder */
 const initFolder = {
-    currentFolder: '',
-    folderList: [{name: 'tennis', id: 0, image: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},
+    currentFolder: 0,
+    folderList: [{name: 'favorite', id: 0, image: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},
                  {name: 'quokka', id: 1, image: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'},
                  {name: 'cat', id: 2, image: 'https://i.pinimg.com/736x/4b/58/f3/4b58f34182fdabf1e38f660d0ba20498.jpg'},
                  {name: 'pixel', id: 3, image: 'https://i.pinimg.com/564x/06/21/99/062199a60a5c693bec625e839f0e6c83.jpg'},
@@ -49,6 +49,11 @@ const initFolder = {
 
 export function Folder(state = initFolder, action) {
     switch (action.type) {
+        case '@FOLDER/SET_CURRENTFOLDER':
+            return {
+                ...state,
+                currentFolder: action.id
+            };
         case '@FOLDER/START_LOADING':
             return {
                 ...state,
@@ -86,15 +91,61 @@ export function Folder(state = initFolder, action) {
 
 /* Preview */
 const initPreview = {
-    currentPreview: 0,
-    previewList: [[]],
+    currentPreview:'',
+    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg'}],
+                   [{loved: false, URL: 'https://i.pinimg.com/564x/1e/0d/2f/1e0d2f7e5f0a7be700dd10af431dbb19.jpg'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/736x/ea/43/ef/ea43ef45b811e2176c5a6464709d17fc.jpg'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/564x/3e/a8/11/3ea8118aeeadaed057a9ae9cd98f3031.jpg'}]],
     previewHasMore : true,
     previewLoading: false,
 };
 
 
 export function Preview(state = initPreview, action) {
+    console.log('Preview Reducer');
     switch (action.type) {
+        case '@PREVIEW/SET_CURRENTPREVIEW':
+            return {
+                ...state,
+                currentPreview: action.url
+        };
+        case '@PREVIEW/DELETE_FAVORITE':
+            var newFavorite = JSON.parse(JSON.stringify(state.previewList));
+            console.log('bitch');
+            for(i = 0; i < newFavorite[action.folderId].length; i++){
+                console.log('bitch');
+                if(newFavorite[action.folderId][i].URL == action.URL){
+                    newFavorite[action.folderId][i].loved = false;
+                }
+            }
+            
+            for(i = 0; i < newFavorite[0].length; i++){
+                if(newFavorite[0][i].URL == action.URL){
+                    newFavorite[0].splice(i, 1);
+                    break;
+                }
+            }
+            //console.log(newFavorite);
+            return{
+                ...state,
+                previewList : newFavorite
+            };
+
+        case '@PREVIEW/ADD_FAVORITE':
+            var newFavorite = JSON.parse(JSON.stringify(state.previewList));
+            for(i = 0; i < newFavorite[action.folderId].length; i++){
+                if(newFavorite[action.folderId][i].URL == action.URL){
+                    newFavorite[action.folderId][i].loved = true;
+                }
+            }
+            newFavorite[0].push({loved: true, URL: action.URL});
+            return{
+                ...state,
+                previewList: newFavorite
+            };
+
         case '@PREVIEW/START_LOADING':
             return {
                 ...state,
@@ -126,6 +177,7 @@ export function Preview(state = initPreview, action) {
                 previewList: newPreviews,
             };
         default:
+            
             return state;
     }
 }
@@ -133,16 +185,18 @@ export function Preview(state = initPreview, action) {
 /* Mode */
 const initModeState = {
     isDarkMode: false,
-    previewMode : 'Home'
+    previewMode : 'Lock'
 };
 
 
 export function Mode(state = initModeState, action) {
     switch (action.type) {
         case '@MODE/SETDARKMODE':
+            console.log('dark');
             return {
                 ...state,
                 isDarkMode: action.isDarkMode,
+                
             };
         case '@MODE/SETPREVIEWMODE':
             return {

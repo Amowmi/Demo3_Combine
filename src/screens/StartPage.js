@@ -3,8 +3,11 @@ import React , { useState } from 'react';
 import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 export default function StartPage() {
+
+    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
     const handleTutorialPress = () => {
         navigation.getParent().navigate('TutorialScreens');
     };
@@ -13,7 +16,7 @@ export default function StartPage() {
     };
     const navigation = useNavigation();
     return (
-        <View style = {styles.backgroundColor}>
+        <View style = {[styles.background,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
            <Image style = {styles.image}source={require('../../assets/Logging/wallistic.png')}></Image>
             <View>
                 <Text style = {styles.title}>Wallistic</Text>
@@ -39,8 +42,7 @@ export default function StartPage() {
 }
 
 const styles = StyleSheet.create({
-    backgroundColor:{
-        backgroundColor:'#FFFFF3',
+    background:{
         flex: 1,
         alignItems: 'center',
     },

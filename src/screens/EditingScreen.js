@@ -6,7 +6,6 @@ import GlobalStyle from '../utils/GlobalStyle';
 import Edit_Header from '../components/Edit/backButton';
 import Slider from '@react-native-community/slider';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
 import { useSelector } from 'react-redux';
 
 
@@ -16,10 +15,13 @@ import 'react-native-gesture-handler';
 import { Gesture, GestureDetector, GestureHandlerRootView, PanGesture, PanGestureHandler, PinchGestureHandler, PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 import Animated, { withTiming, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-const isdarkMode = false;
 const CIRCLE_SIZE = 40;
 const CIRCLE_RING_SIZE = 2;
+const isdarkMode = false;
 const colors = [
+    '#e2e0dd',
+    '#94939c',
+    '#000000',
     '#f44336',
     '#f4ab36',
     '#fde176',
@@ -29,9 +31,7 @@ const colors = [
     '#f2a4b5',
     '#86e2c2',
     '#8b86e2',
-    '#94939c',
-    '#000000',
-    '#e2e0dd',
+
   ];
 export default function RotationScreen(props){
     const [isFlipped, setFlipped] = useState(false);
@@ -42,9 +42,6 @@ export default function RotationScreen(props){
     const [rotate_deg, setRotation] = useState(0);
     const [value, setValue] = React.useState(0);
     const [ColorValue, setColorValue] = React.useState(0);
-
-    // state
-    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     
 
     //pinch
@@ -66,10 +63,6 @@ export default function RotationScreen(props){
     const ColorSheet = React.useRef();
 
     //Color picker
-    
-      
-      
-    
     React.useEffect(() => {
         RotateSheet.current.close();
         DownloadSheet.current.close();
@@ -79,17 +72,7 @@ export default function RotationScreen(props){
     onFlipHandler= () =>{
         setFlipped(!isFlipped);
     };
-    onResetHandler = () =>{
-        setReset(true);
-    };
-    resetHandler= () =>{
-        Alert.alert('Reset', 'Are you sure you want to reset?', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Reset', onPress: () => {
-            onResetHandler
-            } }
-        ]);
-    };
+    
     doneHandler = () => {
         Alert.alert('Done', 'It is saved', [{ text: 'OK' }]);
     };
@@ -131,7 +114,7 @@ export default function RotationScreen(props){
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [
-          {scale: props.isReset ? 0: scale.value },
+          {scale: scale.value },
           {translateX: position.value},
           {translateY: verticalPosition.value },
           {scaleX: (isFlipped ? -1 : 1)},
@@ -139,20 +122,33 @@ export default function RotationScreen(props){
         ],
       }));
     
+      onResetHandler = () =>{
+        setReset(true);
+        setRotation(0);
+        scale.value = 1;
+        position.value = 0;
+        verticalPosition.value = 0;
+        setDistance(0);
+      };
+      resetHandler= () =>{
+          Alert.alert('Reset', 'Are you sure you want to reset?', [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Reset', onPress: () => {
+              onResetHandler()
+              } }
+          ]);
+      };
     //COLOR PICKER
     const navigation = useNavigation();
+    const currentPreview = useSelector(state => state.Preview.currentPreview);
+
     return(
       <View style={{ flex: 1, justifyContent: 'center'}}>
             <View style={styles.Container}>
-            <Image style={previewMode=='Home'? styles.imageOverlayH: styles.invisible} 
-                    source={require('../../assets/img/home.png')}>
-            </Image>
-            <Image style={previewMode=='Lock'? styles.imageOverlayL: styles.invisible}
-                    source={require('../../assets/img/lock.png')}>
-            </Image>
               <View style={styles.header}>
                 <Edit_Header onPress={() => 
-                  navigation.navigate('PreviewScreen')}/* Back Button */  />  
+                  navigation.navigate('PreviewScreen')}/* Back Button */  
+                  color={isdarkMode ? '#F2E7FE' : '#4726B3'}/>  
                 <Text></Text>
                 <Medium_Buttons 
                   onPressFunction={onDownloadHandler}
@@ -163,27 +159,28 @@ export default function RotationScreen(props){
             </View>
             <GestureHandlerRootView>
                 <View style={{width: 320.75,
-        height: 692,
-        borderRadius: 30,
-        overflow: 'hidden', // Clip the image when it exceeds the frame
-        marginTop: -10,
-        marginBottom: 10,
-        backgroundColor: colors[ColorValue]}}>
+                    height: 692,
+                    borderRadius: 30,
+                    overflow: 'hidden', // Clip the image when it exceeds the frame
+                    marginTop: -10,
+                    marginBottom: 10,
+                    backgroundColor: colors[ColorValue]}}>
                     <GestureDetector gesture={pinchGesture} simultaneousHandlers={panGesture}>
                         <GestureDetector gesture={panGesture} simultaneousHandlers={pinchGesture}>
                         
                             <Animated.Image 
                             style={[styles.AllImgImageCard, animatedStyle]} 
-                            source={require('../../assets/img/felix1.jpg')}
+                            source={{uri: currentPreview}}
                             resizeMode='contain'
                             shouldCancelWhen
                             />
+                            
                         
                         </GestureDetector>
                     </GestureDetector>
                 </View>
             </GestureHandlerRootView>
-            <View style={styles.toolBar}>
+            <View style={[styles.toolBar, isdarkMode ? GlobalStyle.On_Surface_Disabled_Darker: {backgroundColor: '#dcdcdc'}]}>
                 <Medium_Buttons 
                   onPressFunction={resetHandler}
                   labelArray={{fontSize: 8,  flex: -1, lineHeight: 22, marginHorizontal: 0, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0}}
@@ -193,14 +190,17 @@ export default function RotationScreen(props){
                 <Icon_Button
                 onPressFunction={onFlipHandler}
                 iconChoice={'flip-horizontal'}
+                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Icon_Button
                 onPressFunction={onRotateHandler}
                 iconChoice={'rotate-right'}
+                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Icon_Button
                 onPressFunction={onBackgroundColorHandler}
                 iconChoice={'circle-outline'}
+                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Medium_Buttons 
                 onPressFunction={doneHandler}
@@ -264,7 +264,7 @@ export default function RotationScreen(props){
             <View style={styles.DownloadBody}>
             <View style={styles.DownloadTop}>
                 <Image style={styles.DownlaodImg}
-                source={require('../../assets/img/felix1.jpg')}
+                source={{uri: currentPreview}}
                 />
                 <View style={styles.DownloadSide}>
                     <Text style={styles.DownloadTitle}>{'Image downloaded to \nyour device!'} </Text>
@@ -299,13 +299,19 @@ export default function RotationScreen(props){
                 wrapper: {
                     backgroundColor: "transparent"
                   }
+                
             }}
             height={440}
             openDuration={250}
             ref={RotateSheet}
         >
             <Slider
-                style={{width: 200, height: 40, marginBottom: 20}}
+                style={{
+                  width: 200, 
+                  height: 40, 
+                  marginBottom: 20, 
+                  backgroundColor: isdarkMode ? '#383838': '#fff'
+                }}
                 minimumValue={-90}
                 maximumValue={90}
                 minimumTrackTintColor= '#4726B3'
@@ -336,7 +342,6 @@ export default function RotationScreen(props){
       flexDirection: 'row',
       justifyContent: 'space-evenly',
       alignItems: 'center',
-      backgroundColor: '#dcdcdc',
       width: '100%',
       height: '100%'
     },
@@ -366,14 +371,13 @@ export default function RotationScreen(props){
         marginBottom: 10
     },
     AllImgImageCard: {
-      zIndex: 1,
       flex: 1,
       width: '100%',
       height: '100%'
     
     },
     RotateSlider:{
-      backgroundColor: '#dcdcdc',
+      backgroundColor: isdarkMode ? '#383838' : '#fff',
       width: '100%',
       height: '100%'
     },
@@ -382,19 +386,21 @@ export default function RotationScreen(props){
         borderTopRightRadius: 14,
         height: 65,
         alignItems: 'center',
-        marginTop:0
+        marginTop:0,
+        backgroundColor: isdarkMode ? '#383838' : '#fff'
+
     },
     DownloadTitle: {
         fontSize: 20,
         fontWeight: '600',
-        ...GlobalStyle.Primary_Linear_p_font,
+        color: isdarkMode ? '#F2E7FE':'#4726B3',
         padding: 10
       },
       DownloadBody: {
         padding: 24,
         paddingTop: 0,
         paddingBottom: 0,
-        backgroundColor: '#dce3e1',
+        backgroundColor: isdarkMode ? '#383838' :'#dce3e1',
         marginTop: 0,
         marginBottom: 0
       },
@@ -409,9 +415,7 @@ export default function RotationScreen(props){
         justifyContent: 'center',
         borderRadius: 30,
         padding: 14,
-        borderWidth: 1,
-        borderColor: '#dce3e1',
-        backgroundColor: '#fff',
+        backgroundColor: isdarkMode ? '#B5C1BE' : '#fff',
         marginTop: 30,
         height: 40
       },
@@ -424,7 +428,7 @@ export default function RotationScreen(props){
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         marginBottom: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
       },
       DownlaodImg: {
         width: '30%',
@@ -460,14 +464,16 @@ export default function RotationScreen(props){
         borderBottomColor: '#efefef',
         paddingHorizontal: 24,
         paddingVertical: 14,
+        backgroundColor: isdarkMode ? '#383838' : '#fff'
       },
       ColorsheetHeaderTitle: {
         fontSize: 20,
         fontWeight: '600',
-        ...GlobalStyle.Primary_Linear_p_font
+        color: isdarkMode ? '#F2E7FE' : '#4726B3'
       },
       ColorsheetBody: {
         padding: 24,
+        backgroundColor: isdarkMode ? '#383838' : '#fff'
       },
       Colorprofile: {
         alignSelf: 'center',
@@ -496,7 +502,7 @@ export default function RotationScreen(props){
         width: CIRCLE_SIZE + CIRCLE_RING_SIZE * 4,
         height: CIRCLE_SIZE + CIRCLE_RING_SIZE * 4,
         borderRadius: 9999,
-        backgroundColor: 'white',
+        backgroundColor: isdarkMode ? '#383838' : 'white',
         borderWidth: CIRCLE_RING_SIZE,
         borderColor: 'transparent',
         marginRight: 8,
@@ -520,8 +526,7 @@ export default function RotationScreen(props){
         justifyContent: 'center',
         borderRadius: 30,
         padding: 14,
-        borderWidth: 1,
-        borderColor: '#fff',
+        borderWidth: 0,
         ...GlobalStyle.Primary_Linear_p_background
       },
       ColorbtnText: {
@@ -555,27 +560,14 @@ export default function RotationScreen(props){
         flexShrink: 1,
         flexBasis: 0,
       },
-      imageOverlayH: {
-        position:'absolute',
-        top:-47,
-        zIndex: 2,
-        width: 320.75,
-        height: 692,
-        resizeMode: 'contain',
-        borderRadius: 30,
+      overlayImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        
       },
-      imageOverlayL: {
-        position:'absolute',
-        top:0,
-        zIndex: 3,
-        width: 320.75,
-        height: 692,
-        resizeMode: 'contain',
-        borderRadius: 30,
-      },
-      invisible: {
-        opacity: 0,
-      }
   });
 
   /*

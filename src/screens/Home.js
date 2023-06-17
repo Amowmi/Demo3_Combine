@@ -3,32 +3,34 @@ import { FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import HomeItem from '../components/HomeItem';
 import { useNavigation ,useRoute} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 
 
-const HomeList= ([
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-{HomePreview:<HomeItem />},
-]);
+// const HomeList= ([
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// {HomePreview:<HomeItem />},
+// ]);
 
 const Home = () => {
 
-
+    const HomeList = useSelector(state => state.Preview.previewList[0]);
+    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
     const navigation = useNavigation();
     const handleFolderPress = () => {
         navigation.getParent().navigate('FolderBox');
     };
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, isDarkMode ? GlobalStyle.Surface_dark: GlobalStyle.Surface_light]}>
             <Text style={[
                 GlobalStyle.Global_title,
-                GlobalStyle.Primary_Linear_p_font,
+                isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font,
                 styles.text
             ]}>
                 Wallistic
@@ -37,11 +39,11 @@ const Home = () => {
                 horizontal
                 data={HomeList}
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => <View style={styles.item}>{item.HomePreview}</View>}
+                renderItem={({item}) => <View style={styles.item}><HomeItem photo ={item} /></View>}
             />
             <Pressable onPress={handleFolderPress}   style={[
                 GlobalStyle.Primary_Linear_p,
-                    styles.button,
+                styles.button,
                 ]}>
                 <Text style={[GlobalStyle.Global_font, styles.buttonText]}>Go To Folders</Text>
             </Pressable>
@@ -55,7 +57,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
     },
     text: {
         fontSize: 25,

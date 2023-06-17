@@ -1,18 +1,28 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, Button } from 'react-native';
+import { StyleSheet, Image, Text, View, Button,Pressable } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import GlobalStyle from '../../utils/GlobalStyle';
 import Heart from './Icons/Heart';
 import Share from './Icons/Share';
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { setCurPreview } from '../../actions/Actions';
+
 
 const Card = (props) => {
-    
+  
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const navigateHandler_edit = () => {
+    dispatch(setCurPreview(props.URL));
+    navigation.navigate('EditingScreen');
+  };
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     return (
       <PaperProvider>
         <View style={styles.view}>
-          <View>
+          <Pressable  onPress = {navigateHandler_edit}>
             <Image style={previewMode=='Lock'? styles.tinyLogoOverlayL : styles.invisible}
                     source={require('../../../assets/img/lock.png')}>
 
@@ -28,12 +38,12 @@ const Card = (props) => {
             <View style={styles.imageDescription}>
               <Text style={[styles.imageDescriptionText, GlobalStyle.Primary_Linear_p_font]}> 2023 / 06 / 14    </Text>
               <View style={styles.imageDescriptionIcon}>
-                <Heart/>
+                <Heart loved={props.loved} URL ={props.URL} folder={props.folder} />
                 <Share/>
               </View>
               
             </View>
-          </View>
+          </Pressable>
           
           
         </View>
@@ -41,7 +51,13 @@ const Card = (props) => {
     );
 }
 
-
+// {/* <Pressable  /* Temporary Button to Edit */ 
+// onPress={navigateHandler_edit}
+// style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
+// ><Text>
+// Go to Edit Screen
+// </Text>
+// </Pressable> */}
 const styles = StyleSheet.create({
 
   view: {

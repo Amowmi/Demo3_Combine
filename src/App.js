@@ -10,14 +10,14 @@ import {Store} from './store/store'
 
 import Toast from 'react-native-toast-message';
 const Stack = createStackNavigator();
-const isDarkMode = true;
+const isDarkMode = false;
 const DarkTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     background: 'white', // 设置背景颜色
-    primary: 'blue', // 设置主要颜色
-    text: 'black', // 设置文本颜色
+    primary: '#8569F6', // 设置主要颜色
+    text: 'white', // 设置文本颜色
     card: '#1E1E1E', // 设置卡片颜色
     border: '#1E1E1E', // 设置边框颜色
     notification: 'yellow', // 设置通知颜色
@@ -44,7 +44,6 @@ export default function App() {
       <Provider store={Store}>
 
       
-      <>
       <NavigationContainer theme={isDarkMode ? DarkTheme :LightTheme } >
 
 
@@ -75,7 +74,7 @@ export default function App() {
         
       </NavigationContainer>
       <Toast />
-      </>
+      
 
       </Provider>
   );

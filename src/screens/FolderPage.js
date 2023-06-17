@@ -5,11 +5,14 @@ import  ItemLList from '../components/ItemList';
 import GlobalStyle from '../utils/GlobalStyle'
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { setUserName,setCurFolder } from '../actions/Actions';
+
 
 // const DATA = [
 //     {id:3},{id:4},{id:5},{id:0}
 //   ];
+
 
 const divdeToList = (folderList)=>{
     var DividedList = [];
@@ -35,19 +38,18 @@ const divdeToList = (folderList)=>{
     else{
         DividedList.push([{id: -1,}]);
     }
-    console.log(DividedList);
     return DividedList;
 }
-const isDarkMode = true;
+
 
 const FolderPage   = ()=>{
+    //const dispatch = useDispatch();
     
-
     const {currentFolder,folderList,folderHasMore,folderLoading,} = useSelector(state => state.Folder);
-
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     const DATA = divdeToList(folderList);
 
-    const navigation = useNavigation();
+    
     const showToast = () => {
         Toast.show({
         position:'bottom',
@@ -61,9 +63,7 @@ const FolderPage   = ()=>{
     const OnAddPress = ()=>{
         setIsOpen(!isOpen);
     }
-    const navigateHandler = () => {
-        navigation.navigate('PreviewScreen');
-    };
+
 
     
 
@@ -96,19 +96,12 @@ const FolderPage   = ()=>{
                     <Pressable style={[styles.selectbutton,GlobalStyle.Primary_Linear_p]}>
                          <Text style={styles.buttonfont}>select</Text>
                     </Pressable>
-                    <Pressable
-                        onPress={navigateHandler}
-                        style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
-                        ><Text>
-                        Go to Edit Screen
-                        </Text>
-                    </Pressable>
                 </View>
             </View>
             <SafeAreaView style={styles.files}>
                 <FlatList
                     data={DATA}
-                    renderItem={({item}) => { <  ItemLList data={item} PressHandler = {OnAddPress}/>}}
+                    renderItem={({item}) => { return(<  ItemLList data={item} PressHandler = {OnAddPress} />  )}}
                     showsHorizontalScrollIndicator={false}
                 />
                 
@@ -181,7 +174,7 @@ const styles = StyleSheet.create({
         height:263,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor: isDarkMode ? '#636363':'#FFFFFF',
+        backgroundColor: true ? '#636363':'#FFFFFF',
         
         borderRadius:12
     },

@@ -2,9 +2,11 @@ import React , { useEffect} from 'react';
 import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 export default function Loading() {
     const navigation = useNavigation();
+    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
     useEffect(() => {
         const timeout = setTimeout(() => {
             navigation.getParent().navigate('FunctionScreens');
@@ -13,21 +15,20 @@ export default function Loading() {
         return () => clearTimeout(timeout); // 清除計時器，防止內存洩漏
       }, []);
     return (
-        <View style = {styles.backgroundColor}>
+        <View style = {[styles.background,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
            <Image style = {styles.image}source={require('../../assets/Logging/wallistic.png')}></Image>
             <View>
-                <Text style = {styles.title}>Wallistic</Text>
+                <Text style = {[isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font]}>Wallistic</Text>
             </View>
-            <View>
-                <Text style = {styles.subtitle2}>provides the most realistic preview {'\n'} of your wallpapers</Text>
+            <View >
+                <Text style = {[styles.subtitle2, isDarkMode ? GlobalStyle.Surface_dark_font : GlobalStyle.Surface_light_font]}>provides the most realistic preview {'\n'} of your wallpapers</Text>
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    backgroundColor:{
-        backgroundColor:'#FFFFF3',
+    background:{
         flex: 1,
         alignItems: 'center',
     },
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     preview: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
     },
 
     image: {
@@ -48,7 +49,6 @@ const styles = StyleSheet.create({
     },
     title: {
         left: 7,
-        //top: 0,
         fontSize: 22,
         marginTop: 20,
        
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     subtitle2: {
         fontSize: 12,
         marginTop: 15,
-        color: '#000000',
         textAlign: 'center',
     },
     

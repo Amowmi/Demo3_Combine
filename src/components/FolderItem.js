@@ -1,10 +1,20 @@
 import React from'react';
 import { StyleSheet, Text, View,ImageBackground,TouchableOpacity  } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle'
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setCurFolder } from '../actions/Actions';
+
 
 
 const FolderItem   = (props)=>{
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const navigateHandler = () => {
 
+        dispatch(setCurFolder(props.data.id));
+        navigation.navigate('PreviewScreen');
+    };
     const image = props.data.image;
     const floderName = props.data.name;
     if(props.data.id==-1){
@@ -20,7 +30,7 @@ const FolderItem   = (props)=>{
     else{
         return(
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={navigateHandler}
             >
             <View style={styles.container}>
     

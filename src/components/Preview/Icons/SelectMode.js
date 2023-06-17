@@ -11,8 +11,7 @@ function SelectMode(props) {
         onPress={()=>{props.PressHandler();}}>
     <Text style={styles.text}>{previewMode}</Text>
     </ TouchableHighlight>
-  )
-    
+  ) 
 };
 
 const styles = StyleSheet.create({

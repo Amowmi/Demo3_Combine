@@ -4,12 +4,14 @@ import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button} fr
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 export default function Logging() {
     const [accounts, setAccounts] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
  
     const navigation = useNavigation();
 
@@ -66,7 +68,7 @@ export default function Logging() {
     */
 
     return (
-        <View style = {styles.backgroundColor}>
+        <View style = {[styles.background, isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
             <Image 
             style = {styles.image}
             source={require('../../assets/Logging/wallistic.png')}></Image>
@@ -114,8 +116,7 @@ export default function Logging() {
 
 
 const styles = StyleSheet.create({
-    backgroundColor:{
-        backgroundColor:'#FFFFF3',
+    background:{
         flex: 1,
         alignItems: 'center',
     },

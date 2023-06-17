@@ -10,6 +10,18 @@ export default StyleSheet.create({
     Primary_Linear_p: {
         backgroundColor: '#8569F6'
     },
+    Surface_light:{
+        backgroundColor: '#ffffff'
+    },
+    Surface_dark:{
+        backgroundColor: '#1E1E1E'
+    },
+    Surface_light_font:{
+        color: '#000000'
+    },
+    Surface_dark_font:{
+        color: '#ffffff'
+    },
     Primary_Linear_p_font: {
         
         color: '#4726B3'

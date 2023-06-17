@@ -4,7 +4,7 @@ import {Text } from 'react-native';
 const Icon_Button = (props) => (
   <IconButton
     icon={props.iconChoice}
-    iconColor={'#4726B3'}
+    iconColor={props.iconColor}
     size={26}
     onPress={props.onPressFunction}
   />

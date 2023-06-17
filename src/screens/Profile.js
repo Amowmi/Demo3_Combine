@@ -9,9 +9,10 @@ const totalPins=120;
 const Profile = () => {
     
   const userName = useSelector(state => state.userName);
+  const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
   
   return(
-        <View style={styles.container}>
+        <View style = {[styles.container,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
            <Text style={[
                 GlobalStyle.Global_title,
                 GlobalStyle.Primary_Linear_p_font,
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#ffffff',
     },
     title: {
         marginTop: 43,

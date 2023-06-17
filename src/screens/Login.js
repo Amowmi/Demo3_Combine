@@ -1,11 +1,12 @@
 //選擇要登入還是創帳號那頁
 import React , { useState } from 'react';
-import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button} from 'react-native';
+import { StyleSheet, Text, View , Image, TextInput, TouchableOpacity, button, Alert} from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setUserName } from '../actions/Actions';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export default function Login() {
 
@@ -23,18 +24,19 @@ export default function Login() {
 
     const handleLoggingPress = async()=> {
         const savedAccount = await AsyncStorage.getItem('accounts');
-        console.log('I am save');
-        console.log(savedAccount);
         const parsedAccount = JSON.parse(savedAccount);
         //console.log('尚未有帳號密碼的頁面');
-        if (parsedAccount.find((account) => account.username === username  &&
+        if (username===''|| password ===''){
+            Alert.alert('Error!', 'Please enter username and password', [{ text: 'OK' }]); // Error Alert
+        }
+        else if (parsedAccount.find((account) => account.username === username  &&
         parsedAccount.find((account) => account.password === password)) )
         {
             dispatch(setUserName(username));
             navigation.getParent().navigate('Loading');
         }
         else{
-            navigation.navigate('TutorialScreens'); // Error Page
+            Alert.alert('Error!', 'Please try again', [{ text: 'OK' }]); // Error Alert
         }
         //navigation.navigate('Loading');
     };

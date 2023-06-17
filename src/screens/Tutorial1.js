@@ -3,8 +3,11 @@ import React , { useState } from 'react';
 import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 export default function Tutorial1() {
+
+    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
     const navigation = useNavigation();
     const handleCanclePress = () => {
         if(navigation.getParent().getState().routeNames[2]=='Help and Support'){
@@ -24,14 +27,16 @@ export default function Tutorial1() {
         // navigation.navigate('Home');
     };
     return (
-        <View style = {styles.backgroundColor}> 
+        <View style = {[styles.background,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}> 
             <View>
                 <TouchableOpacity style={styles.cancleButtom} onPress={handleCanclePress}>
                     <Text style = {styles.Cancle}>Ｘ</Text>
                 </TouchableOpacity>
             </View>
             <View style = {styles.item1}>
-                <Text style = {styles.title}>Welcome to wallistic!</Text>
+                <Text style = {[GlobalStyle.Global_title,styles.title,
+                    isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font]}>
+                    Wallistic</Text>
             </View>
             <View>
                 <Image  style = {styles.image}source={require('../../assets/Logging/tutorial1.png')}></Image>
@@ -64,11 +69,9 @@ export default function Tutorial1() {
 }
 
 const styles = StyleSheet.create({
-    backgroundColor:{
-        backgroundColor:'#FFFFF3',
+    background:{
         flex: 1,
         alignItems: 'center',
-        
     },
     body: {
         flex: 1,
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
         
     },
     cancleButtom:{
-        
+          
         top: 50,
         width: 30,
         left: -160, 
@@ -101,6 +104,7 @@ const styles = StyleSheet.create({
         top: 20,
         fontSize: 22,
         margin: 20,
+        fontWeight:'bold',
         //漸層
        // backgroundImage: linear-gradient(180deg, #6D6DD6 0%, #884ED3 100%),
         

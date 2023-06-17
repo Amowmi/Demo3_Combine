@@ -2,16 +2,24 @@ import * as React from 'react';
 import { StyleSheet, Image, Text, View, Button } from 'react-native';
 
 import { IconButton } from 'react-native-paper';
-
-const Heart = () => (
+import {ToggleLove} from '../../../actions/Actions';
+import { useDispatch } from 'react-redux';
+const Heart = (props) => {
+  const dispatch = useDispatch();
+  onPress = () =>{
+    dispatch(ToggleLove(props.loved,props.folder,props.URL));
+  }
+  
+  
+  return(
     <IconButton
-    icon="cards-heart-outline"
+    icon= {props.loved ? 'cards-heart':"cards-heart-outline"}
     iconColor='#8569F6'
     style={styles.button}
     size={18}
-    onPress={() => console.log('Pressed')}
+    onPress={onPress}
   />
-);
+);}
 
 const styles = StyleSheet.create({
   button:{

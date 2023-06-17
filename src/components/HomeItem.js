@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image} from 'react-native';
 
-const HomeItem = () => {
+const HomeItem = (props) => {
     return(
         <View style={styles.container}>
-            <Image source={require('../../assets/img/model_img.jpg')}  
+            <Image source={{uri:props.photo.URL}}  
                 style={styles.image}/>
             <Image source={require('../../assets/img/lock_screen.png')}  
                 style={styles.lockScreen}/>
@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
     },
     image: {
         zIndex:1,
