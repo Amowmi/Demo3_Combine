@@ -6,7 +6,6 @@ import Log_and_Tuto from './screens/EntryPoints/Log_and_Tuto';
 import TutorialScreens from './screens/EntryPoints/TutorialScreens';
 import { Provider, useSelector } from 'react-redux';
 import {Store} from './store/store';
-import App_InsideProvider from './App_InsideProvider';
 
 
 import Toast from 'react-native-toast-message';
@@ -39,52 +38,30 @@ const LightTheme = {
   },
 };
 
-export default function App() {
-
+export default function App_InsideProvider() {
+  const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);  
   return (
-    <Provider store={Store}>
-      <App_InsideProvider />
-    <Toast /> 
-    
-
-    </Provider>
+      <NavigationContainer theme={isDarkMode?DarkTheme:LightTheme}>
+          <Stack.Navigator initialRouteName="FunctionScreens" >
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'loginScreens'
+                component = {Log_and_Tuto}
+                >
+              </Stack.Screen>
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'FunctionScreens'
+                component = {FunctionScreens}
+                >
+              </Stack.Screen>
+              <Stack.Screen
+                options={{headerShown: false,}}
+                name = 'TutorialScreens'
+                component = {TutorialScreens}
+                >
+              </Stack.Screen>
+          </Stack.Navigator>
+      </NavigationContainer>
   );
- 
-  // return (
-  //     <Provider store={Store}>
-        
-      
-  //     <NavigationContainer >
-
-
-  //         <Stack.Navigator initialRouteName="loginScreens" >
-  //             <Stack.Screen
-  //               options={{headerShown: false,}}
-  //               name = 'loginScreens'
-  //               component = {Log_and_Tuto}
-  //               >
-  //             </Stack.Screen>
-  //             <Stack.Screen
-  //               options={{headerShown: false,}}
-  //               name = 'FunctionScreens'
-  //               component = {FunctionScreens}
-  //               >
-  //             </Stack.Screen>
-  //             <Stack.Screen
-  //               options={{headerShown: false,}}
-  //               name = 'TutorialScreens'
-  //               component = {TutorialScreens}
-  //               >
-  //             </Stack.Screen>
-  //         </Stack.Navigator>
-        
-  //     </NavigationContainer>
-  //     <Toast /> 
-      
-
-  //     </Provider>
-  // );
 }
-
-
-//<FolderPage></FolderPage>

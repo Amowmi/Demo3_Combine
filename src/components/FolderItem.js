@@ -4,6 +4,7 @@ import GlobalStyle from '../utils/GlobalStyle'
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { setCurFolder } from '../actions/Actions';
+import { useSelector } from 'react-redux';
 
 
 
@@ -17,6 +18,7 @@ const FolderItem   = (props)=>{
     };
     const image = props.data.image;
     const floderName = props.data.name;
+    const currentFolder = useSelector(state => state.Folder.currentFolder);
     if(props.data.id==-1){
         return(
             <TouchableOpacity
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
         color:'#777777'
     },
     add:{
-        backgroundColor:'#AAAAAA',
+        backgroundColor:'#DDD',
         alignItems:'center',
     },
     container: {
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     image: {
       flex: 1,
       justifyContent: 'flex-end',
+      backgroundColor:'#DDD',
     },
     text: {
       color: 'white',

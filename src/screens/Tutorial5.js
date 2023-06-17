@@ -17,8 +17,6 @@ export default function Tutorial1() {
             navigation.getParent().navigate('FunctionScreens');
         }
         
-        console.log();
-        console.log('press');
     };
     const handleNextPress = () => {
         navigation.navigate('Tutorial6');
@@ -119,6 +117,8 @@ const styles = StyleSheet.create({
     text:{
         marginTop:30,
         textAlign: 'center',
+        position: 'absolute',
+        zIndex: 2,
     },
     bottom_sets: {
         
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 300,
         height: 32,
-        gap: 100,       
+        gap: 100,    
+        marginTop: 130    
     },
     create_bottom:{
         width: 100,

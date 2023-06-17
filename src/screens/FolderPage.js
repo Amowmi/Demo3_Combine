@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
 import { setUserName,setCurFolder } from '../actions/Actions';
+import { addFolder, pushPreviewList } from '../actions/Actions';
 
 
 // const DATA = [
@@ -44,10 +45,12 @@ const divdeToList = (folderList)=>{
 
 const FolderPage   = ()=>{
     //const dispatch = useDispatch();
+    const dispatch = useDispatch();
     
-    const {currentFolder,folderList,folderHasMore,folderLoading,} = useSelector(state => state.Folder);
+    const folderList = useSelector(state => state.Folder.folderList);
     const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     const DATA = divdeToList(folderList);
+    const [inputText, setInputText] = useState('');
 
     
     const showToast = () => {
@@ -60,21 +63,30 @@ const FolderPage   = ()=>{
         OnAddPress();
       }
     const [isOpen, setIsOpen] = useState(false);
+
     const OnAddPress = ()=>{
+        dispatch(addFolder(inputText));
+        dispatch(pushPreviewList());
         setIsOpen(!isOpen);
+        setInputText('');
     }
+
+    const handleInputChange = (text) => {
+        setInputText(text);
+      };
 
 
     
 
     return(
-        <View style={isDarkMode ? styles.all_dark : styles.all}>
+        <View style={[styles.all,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
             <Modal transparent visible={isOpen}  >
                 <Pressable  onPress={OnAddPress} style={styles.modal2}>
                     <View style={styles.modal}>
                         <Text style={[styles.title, GlobalStyle.Primary_Linear_p_font]}>Create Folder</Text>
                         <TouchableHighlight style={[styles.container,styles.add]}><Text style={styles.addfont}>+</Text></TouchableHighlight>
-                        <TextInput placeholderTextColor = '#969696' placeholderTextStyle = 'bold' style={styles.input} placeholder='Name of Folder'/>
+                        <TextInput placeholderTextColor = '#969696' placeholderTextStyle = 'bold' style={styles.input} placeholder='Name of Folder'
+                        value={inputText} onChangeText={handleInputChange}/>
                         <View  style={styles.Madalbutton}>
                             <TouchableHighlight onPress={showToast} style={[styles.folderbutton,GlobalStyle.Primary_Linear_p]}>
                          <      Text style={styles.folderbuttonfont}>Create</Text>
@@ -147,7 +159,7 @@ const styles = StyleSheet.create({
         margin:15,
         //(for debugging)
         width:74,
-        height:74,
+        height:2,
         borderRadius:15,
         alignItems:'center',
         justifyContent: 'center',
@@ -185,12 +197,10 @@ const styles = StyleSheet.create({
     all:{
         flex:1,
         paddingLeft:20,
-        backgroundColor: '#FFFFFF',
     },
     all_dark:{
         flex:1,
         paddingLeft:20,
-        backgroundColor: '#1E1E1E',
     },
     title:{
         fontWeight: 'bold',

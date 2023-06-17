@@ -19,6 +19,36 @@ export function setDarkMode(isDarkMode){
         isDarkMode: isDarkMode
     }
 }
+
+export function addImageToFolder(folderId, url){
+    return{
+        type: '@PREVIEW/ADD_IMAGE_TO_FOLDER',
+        folderId: folderId,
+        url: url
+    }
+}
+
+export function checkFolderEmpty(folderId, url){
+    return{
+        type: '@FOLDER/CHECK_FOLDER_EMPTY',
+        folderId: folderId,
+        url: url
+    }
+}
+
+export function addFolder(folderName){
+    return{
+        type: '@FOLDER/ADD_FOLDER',
+        folderName: folderName
+    }
+}
+
+export function pushPreviewList(){
+    return{
+        type: '@PREVIEW/PUSH_PREVIEWLIST'
+    }
+}
+
 export function setCurFolder(id){
     return{
         type: '@FOLDER/SET_CURRENTFOLDER',
@@ -38,8 +68,7 @@ export function setPreviewMode(previewMode){
     }
 }
 
-export function ToggleLove(isloved,folderId,URL){
-    console.log('Toggle');
+export function ToggleLove(isloved, folderId, URL){
     if(isloved){
         return{
             type: '@PREVIEW/DELETE_FAVORITE',

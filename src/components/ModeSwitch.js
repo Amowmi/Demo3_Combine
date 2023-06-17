@@ -11,8 +11,9 @@ const ModeSwitch = () => {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
   const onToggleSwitch = () => {
+    dispatch(setDarkMode(!isSwitchOn));
     setIsSwitchOn(!isSwitchOn);
-    dispatch(setDarkMode(isSwitchOn));
+
   }
   return <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />;
 };

@@ -48,15 +48,6 @@ export default function Logging() {
         catch (error) {
         console.log('存儲帳號失敗:', error);
         }
-        // try {
-        //     await AsyncStorage.setItem('username', username);
-        //     await AsyncStorage.setItem('password', password);
-        //     //console.log(password);
-        //     navigation.navigate('StartPage');
-        // }
-        // catch (error) {
-        //     console.log('存儲數據失敗:', error);
-        // }
         
     };
 
@@ -168,7 +159,7 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        
+        paddingHorizontal:10,
         backgroundColor: '#EEEEEE',
         width: 345,
         height: 50,

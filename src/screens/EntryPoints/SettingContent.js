@@ -10,7 +10,7 @@ import ModeSwitch from '../../components/ModeSwitch';
 
 const SettingContent = (props) => {
     return (
-        <DrawerContentScrollView {...props}>
+        <DrawerContentScrollView {...props} >
             <DrawerItemList {...props} />
             <View style={styles.darkModeContainer}>
             <DrawerItem label="Dark Mode" style={styles.darkModeLabel}/><ModeSwitch />

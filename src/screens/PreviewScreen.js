@@ -10,9 +10,11 @@ import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
-import {setPreviewMode} from '../actions/Actions'
+import { setPreviewMode, addImageToFolder, checkFolderEmpty } from '../actions/Actions'
 import { useSelector } from 'react-redux';
-import Dialog from 'react-native-paper';
+
+import Dialog from 'react-native-dialog';
+//import Dialog from 'react-native-paper';
 import Icon_Button from '../components/Edit/IconButton';
 
 
@@ -25,7 +27,6 @@ export default function PreviewScreen(){
 
 
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);
-  //const {isDarkMode,previewMode} = useSelector(state => state.Preview.previewList[]);
   const navigation = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
   const OnSelectPress = () =>{
@@ -45,15 +46,10 @@ export default function PreviewScreen(){
   };
 
   const navigateHandler_edit = () => {
-
     navigation.navigate('EditingScreen');
   };
   const navigateHandler_back = () => {
-    navigation.navigate('FolderPage');
-  };
-
-  const addImgHandler = () => {
-    
+    navigation.navigate(' '); //Go to Folder
   };
 
 
@@ -67,6 +63,30 @@ export default function PreviewScreen(){
   //               {cardIndex : '7', cardURL : 'https://i.pinimg.com/564x/4b/58/f3/4b58f34182fdabf1e38f660d0ba20498.jpg'}];
   const [dialogVisible, setDialogVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+
+  const handleDialogVisibilityChange = (visible) => {
+    setDialogVisible(visible);
+  };
+  const ID = currentFolder;
+  const addCardHandler = () => { //
+    handleDialogVisibilityChange(false);
+    dispatch(checkFolderEmpty(ID, inputText));
+    dispatch(addImageToFolder(ID, inputText));
+    setInputText('');
+  };
+  
+  const showPlusDialog = () => {
+    handleDialogVisibilityChange(true);
+  };
+  
+  const hidePlusDialog = () => {
+    handleDialogVisibilityChange(false);
+    setInputText('');
+  };
+
+  const handleInputChange = (text) => {
+    setInputText(text);
+  };
 
     return(
       <View style={{height: '100%'}}>
@@ -89,9 +109,9 @@ export default function PreviewScreen(){
         </Pressable>
 
       </Modal>
-      <View style={styles.container}>
+      <View style = {[styles.container,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
         <PreviewHeader PressHandler_select={OnSelectPress} PressHandler_back={navigateHandler_back} />
-        <SafeAreaView style={styles.scrollView}>
+        <SafeAreaView style = {[styles.scrollView,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
 
           <FlatList 
             keyExtractor={(item,cardURL)=>cardURL}
@@ -99,13 +119,19 @@ export default function PreviewScreen(){
             columnWrapperStyle={{justifyContent:'space-between', paddingHorizontal:20}}
             renderItem={({item}) => <Card URL={item.URL} loved={item.loved} folder={currentFolder}  style={{flex: 0.5}}/> } />
         </SafeAreaView>
-        <View style={styles.plus}>
+        {currentFolder===0?null:<View style={styles.plus}>
               <Icon_Button
-              onPressFunction={addImgHandler}
+              onPressFunction={showPlusDialog}
               iconColor={'#8569F6'}
               iconChoice={'plus'}
               />
-            </View>
+              <Dialog.Container visible={dialogVisible}>
+                <Dialog.Title>Add your image link:</Dialog.Title>
+                <Dialog.Input value={inputText} onChangeText={handleInputChange} />
+                <Dialog.Button label="Cancel" onPress={hidePlusDialog} />
+                <Dialog.Button label="Add" onPress={addCardHandler} />
+              </Dialog.Container>
+            </View>}
       </View>
         </View>
         
@@ -125,7 +151,6 @@ const styles = StyleSheet.create({
     },
     scrollView: {
       flex: 1,
-      backgroundColor: '#fff',
       width: '100%',
       height: '100%'
     },
@@ -142,7 +167,6 @@ const styles = StyleSheet.create({
       height:180,
       justifyContent:'center',
       alignItems:'center',
-      backgroundColor:'#FFFFFF',
     },
     title:{
       fontWeight: 'bold',

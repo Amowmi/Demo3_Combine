@@ -7,6 +7,8 @@ import Edit_Header from '../components/Edit/backButton';
 import Slider from '@react-native-community/slider';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useSelector } from 'react-redux';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -17,7 +19,6 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PanGesture, PanGestur
 import Animated, { withTiming, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 const CIRCLE_SIZE = 40;
 const CIRCLE_RING_SIZE = 2;
-const isdarkMode = false;
 const colors = [
     '#e2e0dd',
     '#94939c',
@@ -34,6 +35,7 @@ const colors = [
 
   ];
 export default function RotationScreen(props){
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     const [isFlipped, setFlipped] = useState(false);
     const [isReset, setReset] = useState(false);
     const [isBackground, setBackground] = useState(false);
@@ -69,6 +71,20 @@ export default function RotationScreen(props){
         ColorSheet.current.close();
     }, []);
 
+    //download
+    async function downloadImage(imageUrl) {
+      try {
+        const downloadResumable = FileSystem.createDownloadResumable(
+          imageUrl,
+          FileSystem.documentDirectory + 'image.jpg'
+        );
+        const { uri } = await downloadResumable.downloadAsync();
+        await MediaLibrary.saveToLibraryAsync(uri);
+      } catch (error) {
+        console.log('fail to download:', error);
+      }
+    }
+
     onFlipHandler= () =>{
         setFlipped(!isFlipped);
     };
@@ -83,6 +99,7 @@ export default function RotationScreen(props){
         RotateSheet.current.open();
     };
     onDownloadHandler= () =>{
+        downloadImage(currentPreview);
         DownloadSheet.current.open();
         console.log('DOWNLOAD');
     };
@@ -144,11 +161,11 @@ export default function RotationScreen(props){
 
     return(
       <View style={{ flex: 1, justifyContent: 'center'}}>
-            <View style={styles.Container}>
+            <View style={[styles.Container, {backgroundColor: isDarkMode ? '#1d1d1d': '#fff'}]}>
               <View style={styles.header}>
                 <Edit_Header onPress={() => 
                   navigation.navigate('PreviewScreen')}/* Back Button */  
-                  color={isdarkMode ? '#F2E7FE' : '#4726B3'}/>  
+                  color={isDarkMode ? '#F2E7FE' : '#4726B3'}/>  
                 <Text></Text>
                 <Medium_Buttons 
                   onPressFunction={onDownloadHandler}
@@ -180,7 +197,7 @@ export default function RotationScreen(props){
                     </GestureDetector>
                 </View>
             </GestureHandlerRootView>
-            <View style={[styles.toolBar, isdarkMode ? GlobalStyle.On_Surface_Disabled_Darker: {backgroundColor: '#dcdcdc'}]}>
+            <View style={[styles.toolBar, isDarkMode ? GlobalStyle.On_Surface_Disabled_Darker: {backgroundColor: '#dcdcdc'}]}>
                 <Medium_Buttons 
                   onPressFunction={resetHandler}
                   labelArray={{fontSize: 8,  flex: -1, lineHeight: 22, marginHorizontal: 0, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0}}
@@ -190,17 +207,17 @@ export default function RotationScreen(props){
                 <Icon_Button
                 onPressFunction={onFlipHandler}
                 iconChoice={'flip-horizontal'}
-                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
+                iconColor={isDarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Icon_Button
                 onPressFunction={onRotateHandler}
                 iconChoice={'rotate-right'}
-                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
+                iconColor={isDarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Icon_Button
                 onPressFunction={onBackgroundColorHandler}
                 iconChoice={'circle-outline'}
-                iconColor={isdarkMode ? '#F2E7FE' : '#4726B3'}
+                iconColor={isDarkMode ? '#F2E7FE' : '#4726B3'}
                 />
                 <Medium_Buttons 
                 onPressFunction={doneHandler}
@@ -216,10 +233,10 @@ export default function RotationScreen(props){
         openDuration={250}
         ref={ColorSheet}
         >
-        <View style={styles.ColorsheetHeader}>
-          <Text style={styles.ColorsheetHeaderTitle}>Select Background color</Text>
+        <View style={[styles.ColorsheetHeader, {backgroundColor: isDarkMode ? '#383838' : '#fff'}]}>
+          <Text style={[styles.ColorsheetHeaderTitle,{color: isDarkMode ? '#F2E7FE' : '#4726B3'}]}>Select Background color</Text>
         </View>
-        <View style={styles.ColorsheetBody}>
+        <View style={[styles.ColorsheetBody, {backgroundColor: isDarkMode ? '#383838' : '#fff'}]}>
           <View style={[styles.Colorprofile, { backgroundColor: colors[ColorValue] }]}>
 
           </View>
@@ -236,6 +253,7 @@ export default function RotationScreen(props){
                       style={[
                         styles.Colorcircle,
                         isActive && { borderColor: item },
+                        {backgroundColor: isDarkMode ? '#383838' : 'white'}
                       ]}>
                       <View
                         style={[styles.ColorcircleInside, { backgroundColor: item }]}
@@ -261,13 +279,13 @@ export default function RotationScreen(props){
             openDuration={250}
             ref={DownloadSheet}
             >
-            <View style={styles.DownloadBody}>
+            <View style={[styles.DownloadBody, {backgroundColor: isDarkMode ? '#383838' :'#dce3e1'}]}>
             <View style={styles.DownloadTop}>
                 <Image style={styles.DownlaodImg}
                 source={{uri: currentPreview}}
                 />
                 <View style={styles.DownloadSide}>
-                    <Text style={styles.DownloadTitle}>{'Image downloaded to \nyour device!'} </Text>
+                    <Text style={[styles.DownloadTitle, {color: isDarkMode ? '#F2E7FE':'#4726B3'}]}>{'Image downloaded to \nyour device!'} </Text>
                     <Medium_Buttons 
                         onPressFunction={onDownloadHandler}
                         labelArray={{fontSize: 8, flex: -1, lineHeight: 22, marginHorizontal: 0, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0}}
@@ -280,7 +298,7 @@ export default function RotationScreen(props){
                 <Text style={{fontSize: 30}}>App icons</Text>
             </View>
             <TouchableOpacity
-                style={styles.DownloadBtn}
+                style={[styles.DownloadBtn, {backgroundColor: isDarkMode ? '#B5C1BE' : '#fff'}]}
             >
                 <Icon_Button
                 onPressFunction={() => {
@@ -295,7 +313,7 @@ export default function RotationScreen(props){
 
         <RBSheet
             customStyles={{ 
-                container: styles.RotateSheet,
+                container: [styles.RotateSheet, {backgroundColor: isDarkMode ? '#383838' : '#fff'}],
                 wrapper: {
                     backgroundColor: "transparent"
                   }
@@ -310,7 +328,7 @@ export default function RotationScreen(props){
                   width: 200, 
                   height: 40, 
                   marginBottom: 20, 
-                  backgroundColor: isdarkMode ? '#383838': '#fff'
+                  backgroundColor: isDarkMode ? '#383838': '#fff'
                 }}
                 minimumValue={-90}
                 maximumValue={90}
@@ -332,7 +350,6 @@ export default function RotationScreen(props){
   const styles = StyleSheet.create({
     Container: {
       flex: 1,
-      backgroundColor: isdarkMode ? '#1d1d1d': '#fff',
       alignItems: 'center',
       justifyContent: 'space-evenly',
       flexDirection: 'column',
@@ -377,7 +394,6 @@ export default function RotationScreen(props){
     
     },
     RotateSlider:{
-      backgroundColor: isdarkMode ? '#383838' : '#fff',
       width: '100%',
       height: '100%'
     },
@@ -387,20 +403,18 @@ export default function RotationScreen(props){
         height: 65,
         alignItems: 'center',
         marginTop:0,
-        backgroundColor: isdarkMode ? '#383838' : '#fff'
+        
 
     },
     DownloadTitle: {
         fontSize: 20,
         fontWeight: '600',
-        color: isdarkMode ? '#F2E7FE':'#4726B3',
         padding: 10
       },
       DownloadBody: {
         padding: 24,
         paddingTop: 0,
         paddingBottom: 0,
-        backgroundColor: isdarkMode ? '#383838' :'#dce3e1',
         marginTop: 0,
         marginBottom: 0
       },
@@ -415,7 +429,6 @@ export default function RotationScreen(props){
         justifyContent: 'center',
         borderRadius: 30,
         padding: 14,
-        backgroundColor: isdarkMode ? '#B5C1BE' : '#fff',
         marginTop: 30,
         height: 40
       },
@@ -432,7 +445,8 @@ export default function RotationScreen(props){
       },
       DownlaodImg: {
         width: '30%',
-        height: '75%'
+        height: '75%',
+        borderRadius:5,
       },
       DownloadTop:{
         alignItems: 'center',
@@ -464,16 +478,15 @@ export default function RotationScreen(props){
         borderBottomColor: '#efefef',
         paddingHorizontal: 24,
         paddingVertical: 14,
-        backgroundColor: isdarkMode ? '#383838' : '#fff'
       },
       ColorsheetHeaderTitle: {
         fontSize: 20,
         fontWeight: '600',
-        color: isdarkMode ? '#F2E7FE' : '#4726B3'
+        
       },
       ColorsheetBody: {
         padding: 24,
-        backgroundColor: isdarkMode ? '#383838' : '#fff'
+        
       },
       Colorprofile: {
         alignSelf: 'center',
@@ -502,7 +515,6 @@ export default function RotationScreen(props){
         width: CIRCLE_SIZE + CIRCLE_RING_SIZE * 4,
         height: CIRCLE_SIZE + CIRCLE_RING_SIZE * 4,
         borderRadius: 9999,
-        backgroundColor: isdarkMode ? '#383838' : 'white',
         borderWidth: CIRCLE_RING_SIZE,
         borderColor: 'transparent',
         marginRight: 8,

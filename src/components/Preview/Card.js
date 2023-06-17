@@ -1,13 +1,14 @@
-import React from 'react';
-import { StyleSheet, Image, Text, View, Button,Pressable } from 'react-native';
+import React, {useRef} from 'react';
+import { StyleSheet, Image, Text, View, Button, Pressable,  Share } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import GlobalStyle from '../../utils/GlobalStyle';
 import Heart from './Icons/Heart';
-import Share from './Icons/Share';
+import ShareIcon from './Icons/Share';
 import { useSelector ,useDispatch} from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { setCurPreview } from '../../actions/Actions';
-
+import { captureRef } from 'react-native-view-shot';
+import SmallIconButton from '../SmallIconButton';
 
 const Card = (props) => {
   
@@ -16,8 +17,27 @@ const Card = (props) => {
 
   const navigateHandler_edit = () => {
     dispatch(setCurPreview(props.URL));
+    console.log('efgefe');
     navigation.navigate('EditingScreen');
   };
+
+  const viewRef = useRef();
+
+  const shareHandler = async () => {
+    try {
+      const uri = await captureRef(viewRef, {
+        format: 'png',
+        quality: 1
+      });
+      const result1 = await Share.share({
+        message:'Wallistic provide the most realistic wallpaper for you!',
+        url : uri,
+      });
+    } catch{
+      Alert.alert(error.message);
+    }
+  };
+
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     return (
       <PaperProvider>
@@ -31,15 +51,20 @@ const Card = (props) => {
                     source={require('../../../assets/img/home.png')}>
 
             </Image>
+            <View ref={viewRef}>
             <Image
               style={styles.tinyLogo}
               source={{uri: props.URL}}
             />
+            </View>
             <View style={styles.imageDescription}>
-              <Text style={[styles.imageDescriptionText, GlobalStyle.Primary_Linear_p_font]}> 2023 / 06 / 14    </Text>
+              <Text style={[styles.imageDescriptionText, isDarkMode? GlobalStyle.Surface_dark_font:GlobalStyle.Primary_Linear_p_font]}> 2023 / 06 / 14    </Text>
               <View style={styles.imageDescriptionIcon}>
                 <Heart loved={props.loved} URL ={props.URL} folder={props.folder} />
-                <Share/>
+                <SmallIconButton
+                  onPressFunction={shareHandler}
+                  iconChoice={'send-circle-outline'}
+                />
               </View>
               
             </View>
@@ -62,7 +87,6 @@ const styles = StyleSheet.create({
 
   view: {
     flex: 0.5,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -77,6 +101,9 @@ const styles = StyleSheet.create({
     width: 166.43,
     height: 360,
     margin: 8,
+    borderWidth:1,
+    borderBottomWidth:0,
+    borderColor: '#BBB',
     marginBottom: 0,
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,
@@ -123,9 +150,9 @@ const styles = StyleSheet.create({
     height: 30,
     margin: 8,
     marginTop: 0,
-    backgroundColor: '#ffffff',
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
+    borderColor: '#BBB',
+    borderWidth: 0.5,
+    borderTopWidth:0,
     marginBottom: 5,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
@@ -138,9 +165,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imageDescriptionText: {
-    fontSize: 12,
-    paddingTop: 5,
-    paddingLeft: 2 
+    fontSize: 7,
+    paddingTop:9,
+    paddingLeft: 4 
   }
 });
 

@@ -14,6 +14,11 @@ import {
 
 const PreviewHeader = (props) => {
     const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+    const currentFolder = useSelector(state => state.Folder.currentFolder);
+    const folderList = useSelector(state => state.Folder.folderList);
+    console.log('preview mode :' , previewMode);
+    console.log('current folder :', currentFolder);
+    console.log('folderlist:',folderList);
         return (
 
             <View style={styles.header}>
@@ -21,7 +26,7 @@ const PreviewHeader = (props) => {
                     <View style={styles.headerPurple}>
                         <BackButton style={{width: 60}} onPress={props.PressHandler_back}/>
                         <Text style={styles.textPurple}>
-                            Model
+                            {folderList[currentFolder].name}
                         </Text>
                         <SelectMode PressHandler = {props.PressHandler_select}/>
 
@@ -65,7 +70,6 @@ const styles = StyleSheet.create({
     headerWhite: {
         width:'100%',
         height: 30,
-        backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
         

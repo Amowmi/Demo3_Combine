@@ -20,7 +20,8 @@ import { useSelector } from 'react-redux';
 const Home = () => {
 
     const HomeList = useSelector(state => state.Preview.previewList[0]);
-    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+
     const navigation = useNavigation();
     const handleFolderPress = () => {
         navigation.getParent().navigate('FolderBox');
