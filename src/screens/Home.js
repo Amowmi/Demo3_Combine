@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
+import { FlatList, StyleSheet, Text, View, Pressable, TouchableHighlight } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import HomeItem from '../components/HomeItem';
 import { useNavigation ,useRoute} from '@react-navigation/native';
@@ -42,12 +42,12 @@ const Home = () => {
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => <View style={styles.item}><HomeItem photo ={item} /></View>}
             />
-            <Pressable onPress={handleFolderPress}   style={[
-                GlobalStyle.Primary_Linear_p,
+            <TouchableHighlight onPress={handleFolderPress}   underlayColor="#7D7DFF"
+                style={[GlobalStyle.Primary_Linear_p,
                 styles.button,
                 ]}>
                 <Text style={[GlobalStyle.Global_font, styles.buttonText]}>Go To Folders</Text>
-            </Pressable>
+            </TouchableHighlight>
                 
         </View>
     );

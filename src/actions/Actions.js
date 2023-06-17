@@ -55,6 +55,13 @@ export function setCurFolder(id){
         id : id
     }
 }
+
+export function updateRecently(id){
+    return{
+        type: '@FOLDER/UPDATE_RECENTLY',
+        id : id
+    }
+}
 export function setCurPreview(url){
     return{
         type: '@PREVIEW/SET_CURRENTPREVIEW',

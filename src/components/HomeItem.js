@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Pressable} from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, TouchableHighlight} from 'react-native';
 import { useNavigation ,useRoute} from '@react-navigation/native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { setCurPreview } from '../actions/Actions';
@@ -11,7 +11,7 @@ const HomeItem = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const navigateHandler_edit = () => {
-        dispatch(setCurPreview(props.URL));
+        dispatch(setCurPreview(props.photo.URL));
         navigation.getParent().getParent().navigate('FolderBox', {screen: 'EditingScreen'});
       };
 
@@ -21,12 +21,12 @@ const HomeItem = (props) => {
                 style={styles.image}/>
             <Image source={require('../../assets/img/lock_screen.png')}  
                 style={styles.lockScreen}/>
-            <Pressable onPress={navigateHandler_edit}   style={[
-                GlobalStyle.Primary_Linear_p,
+            <TouchableHighlight onPress={navigateHandler_edit}   underlayColor="#7D7DFF"
+                style={[GlobalStyle.Primary_Linear_p,
                 styles.button,
                 ]}>
                 <Text style={[GlobalStyle.Global_font, styles.buttonText]}>Edit Image</Text>
-            </Pressable>
+            </TouchableHighlight>
         </View>
     );
 };

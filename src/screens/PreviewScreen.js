@@ -10,7 +10,7 @@ import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
-import { setPreviewMode, addImageToFolder, checkFolderEmpty } from '../actions/Actions'
+import { setPreviewMode, addImageToFolder, checkFolderEmpty, updateRecently } from '../actions/Actions'
 import { useSelector } from 'react-redux';
 
 import Dialog from 'react-native-dialog';
@@ -24,6 +24,7 @@ export default function PreviewScreen(){
   const dispatch = useDispatch();
   const currentFolder = useSelector(state => state.Folder.currentFolder);
   const CARD = useSelector(state => state.Preview.previewList[currentFolder]);
+
 
 
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);

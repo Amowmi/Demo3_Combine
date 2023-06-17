@@ -2,7 +2,7 @@ import React from'react';
 import { StyleSheet, FlatList,SafeAreaView } from 'react-native';
 import  FolderItem from './FolderItem';
 
-const ItemList   = (props)=>{
+const ItemList = (props)=>{
     return(
             <SafeAreaView style={styles.files}>
                 <FlatList horizontal= {true}

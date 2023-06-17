@@ -1,13 +1,16 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, View ,Pressable,SafeAreaView,FlatList,Modal,TouchableHighlight,TextInput} from 'react-native';
-import  ItemLList from '../components/ItemList';
+import { StyleSheet, Text, View ,Pressable,SafeAreaView,FlatList,Modal,TouchableHighlight,TextInput, Alert} from 'react-native';
+import  ItemList from '../components/ItemList';
 import GlobalStyle from '../utils/GlobalStyle'
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
 import { setUserName,setCurFolder } from '../actions/Actions';
 import { addFolder, pushPreviewList } from '../actions/Actions';
+
+
+import BackButton from '../components/Edit/backButton';
 
 
 // const DATA = [
@@ -43,6 +46,8 @@ const divdeToList = (folderList)=>{
 }
 
 
+
+
 const FolderPage   = ()=>{
     //const dispatch = useDispatch();
     const dispatch = useDispatch();
@@ -52,21 +57,33 @@ const FolderPage   = ()=>{
     const DATA = divdeToList(folderList);
     const [inputText, setInputText] = useState('');
 
-    
+    const navigation = useNavigation();
+    const PressHandler_back = () =>{
+        navigation.getParent().navigate('Setting');
+    };
+
+    const [showAlert, setShowAlert] = useState(false);
+
+
     const showToast = () => {
-        Toast.show({
-        position:'bottom',
-          type: 'success',
-          text2: 'Successful',
-          bottomOffset : 400
-        });
-        OnAddPress();
+        if(inputText){
+            OnAddPress();
+            Alert.alert('Folder Created!');
+        }
+        else{
+            Alert.alert('Please enter Folder name');
+        }
       }
     const [isOpen, setIsOpen] = useState(false);
 
     const OnAddPress = ()=>{
         dispatch(addFolder(inputText));
         dispatch(pushPreviewList());
+        setIsOpen(!isOpen);
+        setInputText('');
+    }
+
+    const OnCancelPress = ()=>{
         setIsOpen(!isOpen);
         setInputText('');
     }
@@ -79,45 +96,53 @@ const FolderPage   = ()=>{
     
 
     return(
-        <View style={[styles.all,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
-            <Modal transparent visible={isOpen}  >
-                <Pressable  onPress={OnAddPress} style={styles.modal2}>
-                    <View style={styles.modal}>
-                        <Text style={[styles.title, GlobalStyle.Primary_Linear_p_font]}>Create Folder</Text>
-                        <TouchableHighlight style={[styles.container,styles.add]}><Text style={styles.addfont}>+</Text></TouchableHighlight>
-                        <TextInput placeholderTextColor = '#969696' placeholderTextStyle = 'bold' style={styles.input} placeholder='Name of Folder'
-                        value={inputText} onChangeText={handleInputChange}/>
-                        <View  style={styles.Madalbutton}>
-                            <TouchableHighlight onPress={showToast} style={[styles.folderbutton,GlobalStyle.Primary_Linear_p]}>
-                         <      Text style={styles.folderbuttonfont}>Create</Text>
-                            </TouchableHighlight>
-                            <TouchableHighlight onPress={OnAddPress} style={[styles.folderbutton,GlobalStyle.Primary_Linear_p]}>
-                                <Text style={styles.folderbuttonfont}>Cancel</Text>
-                            </TouchableHighlight>
+        <View style={{height: '100%', width: '100%'}}>
+            <View style={styles.header}>
+                    <View style={{height: 45}}></View>
+                    <BackButton onPress={PressHandler_back}/>
+                </View>
+            <View style={[styles.all,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
+                <Modal transparent visible={isOpen}  >
+                    <Pressable  onPress={OnAddPress} style={styles.modal2}>
+                        <View style={styles.modal}>
+                            <Text style={[styles.title, GlobalStyle.Primary_Linear_p_font]}>Create Folder</Text>
+                            <TouchableHighlight style={[styles.container,styles.add]}><Text style={styles.addfont}>+</Text></TouchableHighlight>
+                            <TextInput placeholderTextColor = '#969696' placeholderTextStyle = 'bold' style={styles.input} placeholder='Name of Folder'
+                            value={inputText} onChangeText={handleInputChange}/>
+                            <View  style={styles.Madalbutton}>
+                                <TouchableHighlight onPress={showToast} style={[styles.folderbutton,GlobalStyle.Primary_Linear_p]}>
+                            <      Text style={styles.folderbuttonfont}>Create</Text>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={OnCancelPress} style={[styles.folderbutton,GlobalStyle.Primary_Linear_p]}>
+                                    <Text style={styles.folderbuttonfont}>Cancel</Text>
+                                </TouchableHighlight>
+                            </View>
                         </View>
-                    </View>
-                </Pressable>
-
-            </Modal>
-            <View style={styles.bar}>
-                <View style={styles.left}>
-                    <Text style={[styles.title, isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font]}>Folders</Text>
-                    <Text style={ isDarkMode ? GlobalStyle.Primary_light_p : styles.recent }>Opened Recently</Text>
-                </View>
-                <View style={styles.right}>
-                    <Pressable style={[styles.selectbutton,GlobalStyle.Primary_Linear_p]}>
-                         <Text style={styles.buttonfont}>select</Text>
                     </Pressable>
-                </View>
-            </View>
-            <SafeAreaView style={styles.files}>
-                <FlatList
-                    data={DATA}
-                    renderItem={({item}) => { return(<  ItemLList data={item} PressHandler = {OnAddPress} />  )}}
-                    showsHorizontalScrollIndicator={false}
-                />
+
+                </Modal>
                 
-            </SafeAreaView>
+                <View style={styles.bar}>
+                    <View style={styles.left}>
+                        <Text style={[styles.title, isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font]}>Folders</Text>
+                        <Text style={ isDarkMode ? GlobalStyle.Primary_light_p : styles.recent }>Opened Recently</Text>
+                    </View>
+                    <View style={styles.right}>
+                        <Pressable style={[styles.selectbutton,GlobalStyle.Primary_Linear_p]}>
+                            <Text style={styles.buttonfont}>select</Text>
+                        </Pressable>
+                    </View>
+                </View>
+                <SafeAreaView style={styles.files}>
+                    <FlatList
+                        data={DATA}
+                        renderItem={({item}) => { return(<  ItemList data={item} PressHandler = {(OnAddPress)} />  )}}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                    
+                </SafeAreaView>
+
+            </View>
 
         </View>
 
@@ -251,6 +276,15 @@ const styles = StyleSheet.create({
       //alignItems: 'center',
       //justifyContent: 'center',
     },
+    header: {
+        height: 90,
+        paddingLeft: 10,
+        width: '100%'
+    },
+    backButton: {
+        marginTop: 45,
+        color: '#FFF'
+    }
   });
 export default FolderPage
 /**

@@ -25,7 +25,6 @@ export default function Login() {
     const handleLoggingPress = async()=> {
         const savedAccount = await AsyncStorage.getItem('accounts');
         const parsedAccount = JSON.parse(savedAccount);
-        //console.log('尚未有帳號密碼的頁面');
         if (username===''|| password ===''){
             Alert.alert('Error!', 'Please enter username and password', [{ text: 'OK' }]); // Error Alert
         }

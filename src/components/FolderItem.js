@@ -3,7 +3,7 @@ import { StyleSheet, Text, View,ImageBackground,TouchableOpacity  } from 'react-
 import GlobalStyle from '../utils/GlobalStyle'
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { setCurFolder } from '../actions/Actions';
+import { setCurFolder, updateRecently } from '../actions/Actions';
 import { useSelector } from 'react-redux';
 
 
@@ -12,13 +12,17 @@ const FolderItem   = (props)=>{
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const navigateHandler = () => {
-
+        // var i = 0;
+        // if(props.data.id > 0){
+        //     i = 1;
+        // }
+        //dispatch(updateRecently(props.data.id));
         dispatch(setCurFolder(props.data.id));
+        console.log('current id : ', props.data.id);
         navigation.navigate('PreviewScreen');
     };
     const image = props.data.image;
     const floderName = props.data.name;
-    const currentFolder = useSelector(state => state.Folder.currentFolder);
     if(props.data.id==-1){
         return(
             <TouchableOpacity

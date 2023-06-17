@@ -1,5 +1,15 @@
 import { StyleSheet} from 'react-native';
+import { useFonts } from '@expo-google-fonts/raleway';
+import { useFonts as usePoppins } from '@expo-google-fonts/poppins';
 
+/*
+const [fontsLoaded] = useFonts({
+    raleway: require(),
+ });
+const [poppinsLoaded] = useFonts({
+    'poppins': require('@expo-google-fonts/poppins'),
+});
+*/
 export default StyleSheet.create({
     CustomFontBig: {
         fontFamily: 'AbrilFatface-Regular'
@@ -48,9 +58,9 @@ export default StyleSheet.create({
     },
 
     Global_title: {
-        //fontFamily: 'Raleway'
+        //fontFamily: 'raleway'
     },
     Global_font: {
-        //fontFamily: 'Raleway'
+        //fontFamily: 'poppins'
     },
   });

@@ -16,17 +16,21 @@ const PreviewHeader = (props) => {
     const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     const currentFolder = useSelector(state => state.Folder.currentFolder);
     const folderList = useSelector(state => state.Folder.folderList);
-    console.log('preview mode :' , previewMode);
-    console.log('current folder :', currentFolder);
-    console.log('folderlist:',folderList);
+    const len = folderList.length;
+    var i = 0;
+    for(i = 0; i < len; i++){
+        if(folderList[i].id == currentFolder){
+            break;
+        }
+    }
         return (
 
             <View style={styles.header}>
                 <View style={[styles.fullW, GlobalStyle.Primary_Linear_p]}>
                     <View style={styles.headerPurple}>
-                        <BackButton style={{width: 60}} onPress={props.PressHandler_back}/>
+                        <BackButton onPress={props.PressHandler_back}/>
                         <Text style={styles.textPurple}>
-                            {folderList[currentFolder].name}
+                            {folderList[i].name}
                         </Text>
                         <SelectMode PressHandler = {props.PressHandler_select}/>
 
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
         width:'95%',
         height: 91,
         paddingTop: 45,
-        marginLeft: 20.5,
+        marginLeft: 10,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'

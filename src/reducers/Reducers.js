@@ -61,9 +61,42 @@ export function Folder(state = initFolder, action) {
                 };
             }; 
         case '@FOLDER/SET_CURRENTFOLDER':
+            // var newFolderList = JSON.parse(JSON.stringify(state.folderList));
+            // console.log('action.id : ', action.id);
+            // var folderIdByid = 0;
+            // if(action.id != undefined){
+            //     var len = newFolderList.length;
+            //     console.log('action.id : ', action.id);
+            //     var folderIdByid = newFolderList[action.id].id;
+
+            // }
+            // for(var i = 0; i < len; i++){
+            //     if(action.id == newFolderList[i].id){
+            //         folderIdByid = i;
+            //         break;
+            //     }
+            // }
             return {
                 ...state,
                 currentFolder: action.id
+            };
+        case '@FOLDER/UPDATE_RECENTLY':
+            var newFolderList = JSON.parse(JSON.stringify(state.folderList));
+            if(action.id != 0){
+                var head = newFolderList[0];
+                console.log('head ', head);
+                var recent = newFolderList[action.id];
+                console.log('recent ', recent);
+                newFolderList.splice(action.id, 1);
+                newFolderList.splice(0, 1);
+                newFolderList.unshift(recent);
+                newFolderList.unshift(head);
+                console.log('\nnew folder list : ', newFolderList);
+            }
+            
+            return {
+                ...state,
+                folderList: newFolderList
             };
         case '@FOLDER/CHECK_FOLDER_EMPTY':
             var newFolderList = JSON.parse(JSON.stringify(state.folderList));
@@ -116,9 +149,9 @@ const initPreview = {
     previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'}, 
                    {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}, 
                    {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg'}],
-                   [{loved: false, URL: 'https://i.pinimg.com/564x/1e/0d/2f/1e0d2f7e5f0a7be700dd10af431dbb19.jpg'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/736x/ea/43/ef/ea43ef45b811e2176c5a6464709d17fc.jpg'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/564x/3e/a8/11/3ea8118aeeadaed057a9ae9cd98f3031.jpg'}]],
+                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg'}]],
     previewHasMore : true,
     previewLoading: false,
 };
@@ -222,7 +255,6 @@ const initModeState = {
 export function Mode(state = initModeState, action) {
     switch (action.type) {
         case '@MODE/SETDARKMODE':
-            console.log(action.isDarkMode);
             return {
                 ...state,
                 isDarkMode: action.isDarkMode,

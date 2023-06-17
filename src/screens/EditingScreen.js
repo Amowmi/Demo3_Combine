@@ -159,6 +159,17 @@ export default function RotationScreen(props){
     const navigation = useNavigation();
     const currentPreview = useSelector(state => state.Preview.currentPreview);
 
+    const handleFolderPress = () => {
+      DownloadSheet.current.close();
+      navigation.getParent().navigate(' ');
+    };
+
+    const handleHomerPress = () => {
+      DownloadSheet.current.close();
+      navigation.getParent().navigate('Home');
+    };
+
+
     return(
       <View style={{ flex: 1, justifyContent: 'center'}}>
             <View style={[styles.Container, {backgroundColor: isDarkMode ? '#1d1d1d': '#fff'}]}>
@@ -287,7 +298,7 @@ export default function RotationScreen(props){
                 <View style={styles.DownloadSide}>
                     <Text style={[styles.DownloadTitle, {color: isDarkMode ? '#F2E7FE':'#4726B3'}]}>{'Image downloaded to \nyour device!'} </Text>
                     <Medium_Buttons 
-                        onPressFunction={onDownloadHandler}
+                        onPressFunction={handleFolderPress}
                         labelArray={{fontSize: 8, flex: -1, lineHeight: 22, marginHorizontal: 0, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0}}
                         title={'Go To Folders'}
                         styleArray={{height: 23, width: 90, marginHorizontal: 10}}
@@ -301,10 +312,7 @@ export default function RotationScreen(props){
                 style={[styles.DownloadBtn, {backgroundColor: isDarkMode ? '#B5C1BE' : '#fff'}]}
             >
                 <Icon_Button
-                onPressFunction={() => {
-                    DownloadSheet.current.close();
-                    
-                }}
+                onPressFunction={handleHomerPress}
                 iconChoice={'home'}
                 />
             </TouchableOpacity>

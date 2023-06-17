@@ -17,7 +17,6 @@ const Card = (props) => {
 
   const navigateHandler_edit = () => {
     dispatch(setCurPreview(props.URL));
-    console.log('efgefe');
     navigation.navigate('EditingScreen');
   };
 
@@ -159,9 +158,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
     flexDirection: 'row',
-    alignSelf: 'stretch'
   },
   imageDescriptionIcon: {
+    width: 105,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -175,5 +174,6 @@ const styles = StyleSheet.create({
     marginTop:8,
   }
 });
+
 
 export default Card;
