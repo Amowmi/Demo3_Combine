@@ -3,7 +3,8 @@ import { FlatList, StyleSheet, Text, View, Pressable, TouchableHighlight } from 
 import GlobalStyle from '../utils/GlobalStyle';
 import HomeItem from '../components/HomeItem';
 import { useNavigation ,useRoute} from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurFolder } from '../actions/Actions';
 
 
 
@@ -21,6 +22,9 @@ const Home = () => {
 
     const HomeList = useSelector(state => state.Preview.previewList[0]);
     const {isDarkMode,previewMode} = useSelector(state => state.Mode);
+    dispatch = useDispatch();
+
+    //dispatch(setCurFolder(0));
 
     const navigation = useNavigation();
     const handleFolderPress = () => {

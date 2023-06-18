@@ -4,10 +4,11 @@ import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import Icon_Button from '../components/Edit/IconButton';
 
 export default function Tutorial2() {
 
-    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+    const isDarkMode = useSelector(state => state.Mode.isDarkMode);
     const navigation = useNavigation();
     const handleCanclePress = () => {
         if(navigation.getParent().getState().routeNames[2]=='Help and Support'){
@@ -28,8 +29,10 @@ export default function Tutorial2() {
         <View style = {[styles.background,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}> 
             <View>
             <TouchableOpacity style={styles.cancleButtom} onPress={handleCanclePress}>
-                    <Text style = {styles.Cancle}>Ｘ</Text>
-                </TouchableOpacity>
+                <Icon_Button 
+                iconColor={'#8569F6'}
+                iconChoice={'close-circle-outline'}/>
+            </TouchableOpacity>
             </View>
             <View style = {styles.item1}>
                 <Text style = {[GlobalStyle.Global_title,styles.title,
@@ -40,7 +43,7 @@ export default function Tutorial2() {
                 <Image  style = {styles.image}source={require('../../assets/Logging/tutorial2.png')}></Image>
             </View>
             <View style = {styles.textbox}>
-                <Text style = {styles.text}> Choose the folder you want to add the image to.</Text>
+                <Text style = {[styles.text,isDarkMode?GlobalStyle.Surface_dark_font:GlobalStyle.Surface_light_font]}> Choose the folder you want to add the image to.</Text>
             </View>
             <View style={styles.bottom_sets}>
                 <TouchableOpacity style={styles.create_bottom} onPress={handleBackPress}>
@@ -83,15 +86,11 @@ const styles = StyleSheet.create({
         
     },
     cancleButtom:{
-        
-        top: 50,
+        top: 25,
         width: 30,
         left: -160, 
         alignItems: 'center',
         height: 30,
-        borderWidth: 1, // 添加边框宽度
-        borderColor: '#000000', // 添加边框颜色
-        borderRadius: 20,
     },
     Cancle: {
         textAlign: 'center',
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#6D6DD6',
         borderRadius: 20,
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     BackNext:{
         fontSize: 20,

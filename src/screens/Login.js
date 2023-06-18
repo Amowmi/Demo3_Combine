@@ -13,6 +13,7 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isSelected, setSelection] = useState(false);
  
     const navigation = useNavigation();
 
@@ -21,6 +22,8 @@ export default function Login() {
     const handleCreatAccountPress = () => {
         navigation.navigate('Logging');
     };
+
+
 
     const handleLoggingPress = async()=> {
         const savedAccount = await AsyncStorage.getItem('accounts');
@@ -73,7 +76,6 @@ export default function Login() {
                     <Text style={styles.buttonText}></Text>
                 </TextInput>
             </View>
-           
             <View>
                 <TouchableOpacity style={styles.create_account} onPress={handleLoggingPress}> 
                     <Text style = {styles.create_account_buttom} >Login</Text>

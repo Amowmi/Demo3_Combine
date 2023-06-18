@@ -1,11 +1,29 @@
 //import axios from "axios";
 
+//import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 /* User */
-export function userName(state = '', action) {
+const initUserState = {
+    userName:'',
+    password:'',
+    userFolderList:
+    [{name: 'favorite', id: 0, image: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},
+    {name: 'quokka', id: 1, image: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}]
+};
+
+export function account(state = initUserState, action) {
     switch (action.type) {
-        case '@USER_NAME/SETUSERNAME':
-            return action.userName;
+        case '@ACCOUNT/SET_USER_NAME':
+            return {
+                ...state,
+                userName:action.userName
+            };
+        case '@ACCOUNT/SET_FOLDER_LIST':
+            return {
+                ...state,
+                userFolderList:action.userFolderList
+            };
         default:
             return state;
     }
@@ -93,14 +111,12 @@ export function Folder(state = initFolder, action) {
             } 
             if(action.id != 0){
                 var head = newFolderList[0];
-                console.log('head ', head);
                 var recent = newFolderList[switchId];
-                console.log('recent ', recent);
                 newFolderList.splice(switchId, 1);
                 newFolderList.splice(0, 1);
                 newFolderList.unshift(recent);
                 newFolderList.unshift(head);
-                console.log('\nnew folder list : ', newFolderList);
+                //console.log('\nnew folder list : ', newFolderList);
             }
             
             return {
@@ -163,12 +179,12 @@ export function Folder(state = initFolder, action) {
 /* Preview */
 const initPreview = {
     currentPreview:'',
-    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg', date: '2023 / 06 / 14'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 14'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg', date: '2023 / 06 / 14'}],
-                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 16'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg', date: '2023 / 06 / 16'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg', date: '2023 / 06 / 16'}]],
+    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}],
+                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}]],
     previewHasMore : true,
     previewLoading: false,
 };
@@ -209,7 +225,7 @@ export function Preview(state = initPreview, action) {
                     newFavorite[action.folderId][i].loved = true;
                 }
             }
-            newFavorite[0].push({loved: true, URL: action.URL});
+            newFavorite[0].push({loved: true, URL: action.URL, date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'});
             return{
                 ...state,
                 previewList: newFavorite
@@ -234,10 +250,27 @@ export function Preview(state = initPreview, action) {
             d += DATE.getDate();
             //console.log(d);
             
-            newPreviewList[action.folderId].push({loved: false, URL: action.url, date: d});
+            newPreviewList[action.folderId].push({loved: false, URL: action.url, date: d, scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'});
             return{
                 ...state,
                 previewList: newPreviewList
+            };
+        case '@PREVIEW/SET_EDIT_VALUE':
+            var tempList = JSON.parse(JSON.stringify(state.previewList));
+            for(var i = 0; i < tempList[action.folderId].length; i++){
+                if(tempList[action.folderId][i].URL == action.url){
+                    tempList[action.folderId][i].scale_Edit = action.scale;
+                    tempList[action.folderId][i].positionX_Edit = action.positionX;
+                    tempList[action.folderId][i].positionY_Edit = action.positionY;
+                    tempList[action.folderId][i].isFlipped_Edit = action.isFlipped;
+                    tempList[action.folderId][i].distance_Edit = action.distance;
+                    tempList[action.folderId][i].ColorValue_Edit = action.bColor;
+                }
+            }
+            //console.log('in reducer , ', currentFolder);
+            return {
+                ...state,
+                previewList: tempList
             };
         case '@PREVIEW/END_LOADING':
             return {
@@ -294,4 +327,41 @@ export function Mode(state = initModeState, action) {
             return state;
     }
 }
+
+/*editing*/
+// const initEditState = {
+//     scale_Edit: 1,
+//     positionX_Edit: 0,
+//     positionY_Edit: 0,
+//     isFlipped_Edit: false,
+//     distance_Edit: 0,
+//     ColorValue_Edit: '#e2e0dd'
+// };
+// export function Edit(state = initPreview, action) {
+//     switch (action.type) {
+//         case '@PREVIEW/SET_EDIT_VALUE':
+//             var tempList = JSON.parse(JSON.stringify(state.previewList));
+//             for(j=0;j<tempList.length;j++){
+//                 for(i = 0; i < tempList[j].length; i++){
+//                     if(tempList[j][i].URL == action.URL){
+//                         tempList[j][i].scale_Edit = action.scale,
+//                         tempList[j][i].positionX_Edit = action.positionx,
+//                         tempList[j][i].positionY_Edit = action.positiony,
+//                         tempList[j][i].isFlipped_Edit = action.isFlipped,
+//                         tempList[j][i].distance_Edit = action.distance,
+//                         tempList[j][i].ColorValue_Edit = action.bColor
+//                     }
+//                 }
+//             }
+//             // console.log("in reducer for edit");
+//             // console.log("rotation is: ");
+//             // console.log(action.distance);
+//             return {
+//                 ...state,
+//                 previewList: tempList
+//             };
+//         default:
+//             return state;
+//     }
+// }
 

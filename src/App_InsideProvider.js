@@ -18,7 +18,6 @@ const DarkTheme = {
     text: 'white', // 设置文本颜色
     card: '#1E1E1E', // 设置卡片颜色
     border: '#1E1E1E', // 设置边框颜色
-    notification: 'yellow', // 设置通知颜色
     headerTintColor: 'white', // 设置标题栏文本颜色
     // 添加其他您想要更改的颜色属性...
   },
@@ -32,14 +31,13 @@ const LightTheme = {
     text: 'black', // 设置文本颜色
     card: 'white', // 设置卡片颜色
     border: 'white', // 设置边框颜色
-    notification: 'yellow', // 设置通知颜色
     headerTintColor: 'white', // 设置标题栏文本颜色
     // 添加其他您想要更改的颜色属性...
   },
 };
 
 export default function App_InsideProvider() {
-  const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);  
+  const isDarkMode = useSelector(state => state.Mode.isDarkMode);  
   return (
       <NavigationContainer theme={isDarkMode?DarkTheme:LightTheme}>
           <Stack.Navigator initialRouteName="FunctionScreens" >

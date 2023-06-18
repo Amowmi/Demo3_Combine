@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        width: 277.01,
+        height: 600,
     },
     image: {
         zIndex:1,

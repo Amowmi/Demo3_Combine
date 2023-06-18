@@ -8,14 +8,15 @@ const totalPins=120;
 
 const Profile = () => {
     
-  const userName = useSelector(state => state.userName);
-  const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+  const userName = useSelector(state => state.account.userName);
+  console.log(userName);
+  const isDarkMode = useSelector(state => state.Mode.isDarkMode);
   
   return(
         <View style = {[styles.container,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}>
            <Text style={[
                 GlobalStyle.Global_title,
-                GlobalStyle.Primary_Linear_p_font,
+                isDarkMode?GlobalStyle.Primary_Linear_p_light_font: GlobalStyle.Primary_Linear_p_font,
                 styles.title]} >
                 Profile
             </Text>
@@ -25,9 +26,9 @@ const Profile = () => {
                 GlobalStyle.Primary_Linear_p,
                 styles.box]}></View>
             <View style={styles.box}>
-                <Text style={styles.totalPins}>{totalPins}</Text>
+                <Text style={[styles.totalPins,isDarkMode?GlobalStyle.Surface_dark_font:GlobalStyle.Surface_light_font]}>{totalPins}</Text>
                 <Text style={{lineHeight:1}}>&nbsp;</Text>
-                <Text style={styles.totalPinsText}>Total pins</Text>
+                <Text style={[styles.totalPinsText, isDarkMode?GlobalStyle.Surface_dark_font:GlobalStyle.Surface_light_font]}>Total pins</Text>
             </View>
             <DataTable style={styles.table} >
                 <DataTable.Row style={styles.row}>
@@ -104,7 +105,6 @@ const styles = StyleSheet.create({
     totalPinsText:{
         lineHeight:12,
         fontSize:12,
-        color:727477,
     },
     button: {
         alignItems: 'center',

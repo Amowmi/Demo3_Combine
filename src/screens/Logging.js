@@ -10,8 +10,10 @@ export default function Logging() {
     const [accounts, setAccounts] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    //const [userFolderList, setUserFolder] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+    const isDarkMode = useSelector(state => state.Mode.isDarkMode);
+    const folderList = useSelector(state => state.account.userFolderList);
  
     const navigation = useNavigation();
 
@@ -34,7 +36,9 @@ export default function Logging() {
         }
         // 將新帳號加入帳號陣列
         const temp = accounts;
-        temp.push({username: username, password: password })
+
+        temp.push({username: username, password: password ,
+            userFolderList:[{name: 'favorite', id: 0, image: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'},]})
         setAccounts(temp);
 
         // 清空輸入框

@@ -1,10 +1,19 @@
 /* Username */
 export function setUserName(userName){
     return{
-        type: '@USER_NAME/SETUSERNAME',
+        type: '@ACCOUNT/SET_USER_NAME',
         userName: userName
     }
 }
+
+export function setUserFolder(userFolderList){
+    return{
+        type: '@ACCOUNT/SET_USER_FOLDER',
+        userFolderList: userFolderList
+    }
+}
+
+
 // export function listPreview(id){
 //     return{
 //         type: '@PREVIEW/LIST_PREVIEW',
@@ -90,6 +99,22 @@ export function ToggleLove(isloved, folderId, URL){
             folderId: folderId,
             URL:URL
         }
+    }
+
+}
+
+export function SetEdit(folderId, url, scale, positionx, positiony, isflip, dist, bColor){
+    console.log("in action SetEdit for edit, currentFolder :", folderId);
+    return{
+        type: '@PREVIEW/SET_EDIT_VALUE',
+        folderId: folderId,
+        url: url,
+        scale: scale,
+        positionX: positionx,
+        positionY: positiony,
+        isFlipped: isflip,
+        distance: dist,
+        bColor: bColor
     }
 
 }

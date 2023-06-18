@@ -4,10 +4,11 @@ import { StyleSheet, Text, View , Image, TouchableOpacity } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import Icon_Button from '../components/Edit/IconButton';
 
 export default function Tutorial1() {
 
-    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+    const isDarkMode = useSelector(state => state.Mode.isDarkMode);
     const navigation = useNavigation();
     const handleCanclePress = () => {
         if(navigation.getParent().getState().routeNames[2]=='Help and Support'){
@@ -30,8 +31,10 @@ export default function Tutorial1() {
         <View style = {[styles.background,isDarkMode ? GlobalStyle.Surface_dark : GlobalStyle.Surface_light]}> 
             <View>
             <TouchableOpacity style={styles.cancleButtom} onPress={handleCanclePress}>
-                    <Text style = {styles.Cancle}>Ｘ</Text>
-                </TouchableOpacity>
+                <Icon_Button 
+                iconColor={'#8569F6'}
+                iconChoice={'close-circle-outline'}/>
+            </TouchableOpacity>
             </View>
                 <Text style = {[GlobalStyle.Global_title,styles.title,
                     isDarkMode ? GlobalStyle.Primary_Linear_p_light_font : GlobalStyle.Primary_Linear_p_font]}>
@@ -40,7 +43,7 @@ export default function Tutorial1() {
                 <Image  style = {styles.image}source={require('../../assets/Logging/tutorial6.png')}></Image>
             </View>
             <View style = {styles.textbox}>
-                <Text style = {styles.text}> Tap on an image to enter the editing page. Make adjustments to see how the image presents on your device.</Text>
+                <Text style = {[styles.text,isDarkMode?GlobalStyle.Surface_dark_font:GlobalStyle.Surface_light_font]}> Tap on an image to enter the editing page. Make adjustments to see how the image presents on your device.</Text>
             </View>
             <View style={styles.bottom_sets}>
                 <TouchableOpacity style={styles.create_bottom} onPress={handleBackPress}>
@@ -83,15 +86,11 @@ const styles = StyleSheet.create({
         
     },
     cancleButtom:{
-        
-        top: 50,
+        top: 25,
         width: 30,
         left: -160, 
         alignItems: 'center',
         height: 30,
-        borderWidth: 1, // 添加边框宽度
-        borderColor: '#000000', // 添加边框颜色
-        borderRadius: 20,
     },
     Cancle: {
         textAlign: 'center',

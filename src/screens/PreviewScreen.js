@@ -23,6 +23,7 @@ export default function PreviewScreen(){
 
   const dispatch = useDispatch();
   const currentFolder = useSelector(state => state.Folder.currentFolder);
+  console.log('go in preview, currentFolder :', currentFolder);
   const CARD = useSelector(state => state.Preview.previewList[currentFolder]);
 
 
@@ -118,7 +119,7 @@ export default function PreviewScreen(){
             keyExtractor={(item,cardURL)=>cardURL}
             data={CARD} numColumns={2}  
             columnWrapperStyle={{justifyContent:'space-between', paddingHorizontal:20}}
-            renderItem={({item}) => <Card URL={item.URL} loved={item.loved} folder={currentFolder} date={item.date} style={{flex: 0.5}}/> } />
+            renderItem={({item}) => <Pressable style={{flex: 1}}><Card URL={item.URL} loved={item.loved} folder={currentFolder} date={item.date} style={{flex: 0.5}}/></Pressable> } />
         </SafeAreaView>
         {currentFolder===0?null:<View style={styles.plus}>
               <Icon_Button

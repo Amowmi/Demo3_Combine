@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 
 export default function Loading() {
     const navigation = useNavigation();
-    const {isDarkMode} = useSelector(state => state.Mode.isDarkMode);
+    const isDarkMode = useSelector(state => state.Mode.isDarkMode);
     useEffect(() => {
         const timeout = setTimeout(() => {
             navigation.getParent().navigate('FunctionScreens');
-        }, 3000); // 3秒後跳轉
+        }, 1500); // 1.5秒後跳轉
     
         return () => clearTimeout(timeout); // 清除計時器，防止內存洩漏
       }, []);

@@ -6,7 +6,7 @@ import GlobalStyle from '../utils/GlobalStyle'
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
-import { setUserName,setCurFolder } from '../actions/Actions';
+import { setUserName,setCurFolder,setUserFolder } from '../actions/Actions';
 import { addFolder, pushPreviewList } from '../actions/Actions';
 
 
@@ -79,6 +79,7 @@ const FolderPage   = ()=>{
     const OnAddPress = ()=>{
         dispatch(addFolder(inputText));
         dispatch(pushPreviewList());
+        dispatch(setUserFolder(folderList));
         setIsOpen(!isOpen);
         setInputText('');
     }

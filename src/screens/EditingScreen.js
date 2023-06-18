@@ -6,9 +6,10 @@ import GlobalStyle from '../utils/GlobalStyle';
 import Edit_Header from '../components/Edit/backButton';
 import Slider from '@react-native-community/slider';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import {SetEdit, ResetEdit} from '../actions/Actions';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +20,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PanGesture, PanGestur
 import Animated, { withTiming, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 const CIRCLE_SIZE = 40;
 const CIRCLE_RING_SIZE = 2;
+
 const colors = [
     '#e2e0dd',
     '#94939c',
@@ -35,28 +37,52 @@ const colors = [
 
   ];
 export default function RotationScreen(props){
-    const {isDarkMode,previewMode} = useSelector(state => state.Mode);
-    const [isFlipped, setFlipped] = useState(false);
-    const [isReset, setReset] = useState(false);
-    const [isBackground, setBackground] = useState(false);
-    const [isDownload, setDownload] = useState(false);
-    const [distance, setDistance] = useState(5);
-    const [rotate_deg, setRotation] = useState(0);
-    const [value, setValue] = React.useState(0);
-    const [ColorValue, setColorValue] = React.useState(0);
+    const {isDarkMode, previewMode} = useSelector(state => state.Mode);
+    const currentFolder = useSelector(state => state.Folder.currentFolder);
+    const currentPreview = useSelector(state => state.Preview.currentPreview);
+    const previewList = useSelector(state => state.Preview.previewList);
+    
+    const dispatch = useDispatch();
+    // const {scale_Edit, positionX_Edit, positionY_Edit, isFlipped_Edit, distance_Edit, ColorValue_Edit} = useSelector(state => state.Edit);
+console.log(previewList);
+
+    var previewID = 0;
+    for(i = 0; i < previewList[currentFolder].length; i++){
+      if(previewList[currentFolder][i].URL == currentPreview){
+        previewID = i;
+      }
+    }
+    
+    console.log('Flip : ', previewList[currentFolder][previewID].isFlipped_Edit);
     
 
+    const [isFlipped, setFlipped] = useState(previewList[currentFolder][previewID].isFlipped_Edit);
+    const [isReset, setReset] = useState(false);
+    // const [isBackground, setBackground] = useState(false);
+    // const [isDownload, setDownload] = useState(false);
+    const [distance, setDistance] = useState(previewList[currentFolder][previewID].distance_Edit);
+    const [rotate_deg, setRotation] = useState(previewList[currentFolder][previewID].distance_Edit);
+    // const [value, setValue] = React.useState(0);
+    const [ColorValue, setColorValue] = useState(previewList[currentFolder][previewID].ColorValue_Edit);
+    
     //pinch
-    const scale = useSharedValue(1);
-    const savedScale = useSharedValue(1);
+    const scale = useSharedValue(previewList[currentFolder][previewID].scale_Edit);
+    const savedScale = useSharedValue(previewList[currentFolder][previewID].scale_Edit);
     //pan
     const END_POSITION = 200;
     const onLeft = useSharedValue(true);
-    const position = useSharedValue(0);
+    const position = useSharedValue(previewList[currentFolder][previewID].positionX_Edit);
     //pan vertical movement
     const END_VERTICAL_POSITION = 200;
     const onTop = useSharedValue(true);
-    const verticalPosition = useSharedValue(0);
+    const verticalPosition = useSharedValue(previewList[currentFolder][previewID].positionY_Edit);
+    
+    //distance for slider
+    //setDistance(distance_Edit);
+    //color
+    //setColorValue(ColorValue_Edit);
+    //flip
+    //setFlipped(isFlipped_Edit);
 
 
     //RBS
@@ -85,20 +111,17 @@ export default function RotationScreen(props){
       }
     }
 
-    onFlipHandler= () =>{
+    const onFlipHandler= () =>{
         setFlipped(!isFlipped);
     };
     
-    doneHandler = () => {
-        Alert.alert('Done', 'It is saved', [{ text: 'OK' }]);
-    };
-    onBackgroundColorHandler = () => {
+    const onBackgroundColorHandler = () => {
         ColorSheet.current.open();
     };
-    onRotateHandler = () => {
+    const onRotateHandler = () => {
         RotateSheet.current.open();
     };
-    onDownloadHandler= () =>{
+    const onDownloadHandler= () =>{
         downloadImage(currentPreview);
         DownloadSheet.current.open();
         console.log('DOWNLOAD');
@@ -128,7 +151,7 @@ export default function RotationScreen(props){
             position.value = e.translationX;
             verticalPosition.value = e.translationY;
     });
-
+    
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [
           {scale: scale.value },
@@ -139,7 +162,8 @@ export default function RotationScreen(props){
         ],
       }));
     
-      onResetHandler = () =>{
+    
+      const onResetHandler = () =>{
         setReset(true);
         setRotation(0);
         scale.value = 1;
@@ -147,7 +171,7 @@ export default function RotationScreen(props){
         verticalPosition.value = 0;
         setDistance(0);
       };
-      resetHandler= () =>{
+      const resetHandler= () =>{
           Alert.alert('Reset', 'Are you sure you want to reset?', [
               { text: 'Cancel', style: 'cancel' },
               { text: 'Reset', onPress: () => {
@@ -155,9 +179,16 @@ export default function RotationScreen(props){
               } }
           ]);
       };
+      const doneHandler = () => {
+        //console.log('currentFolder 1  :', currentFolder);
+        dispatch(SetEdit(currentFolder, currentPreview, scale.value, position.value, verticalPosition.value, isFlipped, distance, ColorValue));
+        Alert.alert('Done', 'It is saved', [{ text: 'OK' }]);
+        //console.log('currentFolder 2  :', currentFolder);
+        //navigation.navigate('PreviewScreen');
+      };
     //COLOR PICKER
     const navigation = useNavigation();
-    const currentPreview = useSelector(state => state.Preview.currentPreview);
+    
 
     const handleFolderPress = () => {
       DownloadSheet.current.close();

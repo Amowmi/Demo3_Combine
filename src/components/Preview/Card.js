@@ -36,7 +36,6 @@ const Card = (props) => {
       Alert.alert(error.message);
     }
   };
-  //console.log('date: ', props.date);
 
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     return (
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   imageDescriptionIcon: {
-    width: 105,
+    width: 100,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-end',
