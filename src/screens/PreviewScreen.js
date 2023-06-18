@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, ScrollView, Button, Modal, TouchableHighlight, SafeAreaView, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import Card from '../components/Preview/Card';
 import PreviewHeader from '../components/Preview/PreviewHeader';
@@ -8,23 +8,92 @@ import { PaperProvider } from 'react-native-paper';
 import { Pressable } from 'react-native';
 import GlobalStyle from '../utils/GlobalStyle';
 import { useNavigation } from '@react-navigation/native';
-
+import { AppState } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setPreviewMode, addImageToFolder, checkFolderEmpty, updateRecently } from '../actions/Actions'
+import { setPreviewMode, addImageToFolder, checkFolderEmpty, updateRecently,readstoredPreview } from '../actions/Actions'
 import { useSelector } from 'react-redux';
 
 import Dialog from 'react-native-dialog';
 //import Dialog from 'react-native-paper';
 import Icon_Button from '../components/Edit/IconButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function PreviewScreen(){
- 
-
+  const [appState, setAppState] = useState(AppState.currentState);
   const dispatch = useDispatch();
+  
+  // Call the function to store data
+  const PREVIEW = useSelector(state => state.Preview);
+
+useEffect(() => {
+  
+  
+  // try{
+  //   AsyncStorage.setItem(
+  //       'previews',
+  //       JSON.stringify(PREVIEW))
+  //  }catch(error){}
+  async function storeDataInStorage() {
+    try {
+      await AsyncStorage.setItem('previews',  JSON.stringify(PREVIEW));
+      console.log('Data stored successfully');
+      console.log(JSON.stringify(PREVIEW));
+    } catch (error) {
+      // Handle errors, if any
+      console.log('Error storing data:', error);
+    }
+  }
+    // 监听 AppState 的状态变化
+    const handleAppStateChange = (nextAppState) => {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        // App 从后台或非活动状态切换到活动状态
+        // 在这里保存数据到 async storage
+        storeDataInStorage();
+      } else if (nextAppState === 'background') {
+        // App 进入后台状态
+        // 在这里保存数据到 async storage
+        storeDataInStorage();
+      }
+      setAppState(nextAppState);
+    };
+  
+    // 添加 AppState 变化事件监听
+    AppState.addEventListener('change', handleAppStateChange);
+  
+    // 清除事件监听器
+
+  }, [appState]);
+
+  //for store
+  useEffect(() => {
+    const storedpreviews = async () => {
+      try {
+        const data = await AsyncStorage.getItem('previews');
+        // Handle the retrieved data
+        if (data) {
+          // Data exists in async storage
+          console.log('Retrieved data:', data);
+             dispatch(readstoredPreview(JSON.parse(data)));
+          // Further processing or updating state, if needed
+
+        } else {
+          // Data doesn't exist in async storage
+          console.log('No data found in async storage');
+        }
+      } catch (error) {
+        // Handle errors, if any
+        console.log('Error retrieving data:', error);
+      }
+    };
+
+    // Call the function to retrieve data during component mount
+    storedpreviews();
+  }, []);
   const currentFolder = useSelector(state => state.Folder.currentFolder);
   console.log('go in preview, currentFolder :', currentFolder);
   const CARD = useSelector(state => state.Preview.previewList[currentFolder]);
+  
 
 
 
@@ -74,6 +143,7 @@ export default function PreviewScreen(){
     handleDialogVisibilityChange(false);
     dispatch(checkFolderEmpty(ID, inputText));
     dispatch(addImageToFolder(ID, inputText));
+
     setInputText('');
   };
   
@@ -159,6 +229,7 @@ const styles = StyleSheet.create({
     modal2:{ // Modal Background
       flex:1,
       width: '100%',
+      height: 200,
       alignItems:'center',
       backgroundColor:'#888888',
       opacity:0.9
@@ -168,6 +239,7 @@ const styles = StyleSheet.create({
       width:'100%',
       height:180,
       justifyContent:'center',
+      backgroundColor:'#fff',
       alignItems:'center',
     },
     title:{

@@ -52,9 +52,23 @@ export function addFolder(folderName){
     }
 }
 
+export function readstoredFolder(storedData){
+    return{
+        type: '@FOLDER/READ_STORED_FOLDER',
+        storedData: storedData
+    }
+}
+
+
 export function pushPreviewList(){
     return{
         type: '@PREVIEW/PUSH_PREVIEWLIST'
+    }
+}
+export function readstoredPreview(storedData){
+    return{
+        type: '@PREVIEW/READ_TORED_PREVIEW',
+        storedData:storedData
     }
 }
 

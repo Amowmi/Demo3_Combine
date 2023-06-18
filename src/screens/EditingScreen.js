@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Image, Button, Pressable, Alert, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableHighlight, Image, Button, Pressable, Alert, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import Medium_Buttons from '../components/Edit/CustomButton';
 import Icon_Button from '../components/Edit/IconButton';
 import GlobalStyle from '../utils/GlobalStyle';
@@ -9,7 +9,8 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useSelector, useDispatch } from 'react-redux';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
-import {SetEdit, ResetEdit} from '../actions/Actions';
+import {setPreviewMode, SetEdit, ResetEdit} from '../actions/Actions';
+import SelectMode from '../components/Preview/Icons/SelectMode';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +21,9 @@ import { Gesture, GestureDetector, GestureHandlerRootView, PanGesture, PanGestur
 import Animated, { withTiming, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 const CIRCLE_SIZE = 40;
 const CIRCLE_RING_SIZE = 2;
-
+var lockVisible = 1;
+var homeVisible = 0;
+var OriginalVisible = 0;
 const colors = [
     '#e2e0dd',
     '#94939c',
@@ -44,7 +47,42 @@ export default function RotationScreen(props){
     
     const dispatch = useDispatch();
     // const {scale_Edit, positionX_Edit, positionY_Edit, isFlipped_Edit, distance_Edit, ColorValue_Edit} = useSelector(state => state.Edit);
-console.log(previewList);
+    
+    // select mode functions
+    const [isOpen, setIsOpen] = useState(false);
+    const OnSelectPress = () =>{
+      setIsOpen(!isOpen);
+    };
+    const onOriginalPress = () => {
+      setIsOpen(!isOpen);
+      dispatch(setPreviewMode('Original'));
+    };
+    const onHomePress = () => {
+      setIsOpen(!isOpen);
+      dispatch(setPreviewMode('Home'))
+    };
+    const onLockPress = () => {
+      setIsOpen(!isOpen);
+      dispatch(setPreviewMode('Lock'))
+    };
+    console.log("preview mode is");
+    console.log(previewMode);
+    if(previewMode == 'Lock'){
+      lockVisible = 1;
+      homeVisible = 0;
+      OriginalVisible = 0;
+    }
+    else if(previewMode =='Original'){
+      lockVisible = 0;
+      homeVisible = 0; 
+      OriginalVisible = 1;
+    }
+    else{
+      lockVisible = 0;
+      homeVisible = 1;
+      OriginalVisible = 0;
+    }
+
 
     var previewID = 0;
     for(i = 0; i < previewList[currentFolder].length; i++){
@@ -52,6 +90,8 @@ console.log(previewList);
         previewID = i;
       }
     }
+    console.log(previewList[currentFolder][previewID].ColorValue_Edit);
+
     
     console.log('Flip : ', previewList[currentFolder][previewID].isFlipped_Edit);
     
@@ -203,14 +243,35 @@ console.log(previewList);
 
     return(
       <View style={{ flex: 1, justifyContent: 'center'}}>
+        <Modal transparent visible={isOpen}  >
+          <Pressable  onPress={OnSelectPress} style={styles.modal2}>
+            <View style={styles.modal}>
+              <Text style={[styles.title, GlobalStyle.Primary_Linear_p_font]}>Select Mode</Text>
+              <View style={styles.madalbutton}>
+                <TouchableHighlight onPress={onOriginalPress} style={[styles.button,GlobalStyle.Primary_Linear_p]}>
+                  <Text style={styles.buttonfont}>Original</Text>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={onHomePress} style={[styles.button,GlobalStyle.Primary_Linear_p]}>
+                  <Text style={styles.buttonfont}>HomeScreen</Text>
+                 </TouchableHighlight>
+                 <TouchableHighlight onPress={onLockPress} style={[styles.button,GlobalStyle.Primary_Linear_p]}>
+                  <Text style={styles.buttonfont}>LockScreen</Text>
+                 </TouchableHighlight>
+              </View>
+            </View>
+          </Pressable>
+        </Modal>
             <View style={[styles.Container, {backgroundColor: isDarkMode ? '#1d1d1d': '#fff'}]}>
               <View style={styles.header}>
-                <Edit_Header onPress={() => 
-                  navigation.navigate('PreviewScreen')}/* Back Button */  
+                <Edit_Header onPress={() =>  
+                  navigation.navigate('PreviewScreen')} /* Back Button */  
                   color={isDarkMode ? '#F2E7FE' : '#4726B3'}/>  
-                <Text></Text>
+                <Text>
+                  <SelectMode PressHandler = {OnSelectPress}/>
+                </Text>
                 <Medium_Buttons 
-                  onPressFunction={onDownloadHandler}
+                
+                  onPressFunction={onDownloadHandler} /* Download Button */  
                   labelArray={{fontSize: 8, flex: -1, lineHeight: 22, marginHorizontal: 0, paddingVertical: 0, marginVertical: 0, paddingHorizontal: 0}}
                   title={'Download'}
                   styleArray={{height: 23, width: 60}}
@@ -237,8 +298,24 @@ console.log(previewList);
                         
                         </GestureDetector>
                     </GestureDetector>
+                    
+                    <View style={styles.overlayView} >
+                      <Image 
+                        source={require('../../assets/img/lockTop.png')}
+                        style={previewMode=='Lock'?styles.overlayImage_lock:styles.invisible}
+
+                      />
+                    </View>
+                    <View style={styles.overlayView} >
+                      <Image 
+                        source={require('../../assets/img/home_Top.png')}
+                        style={previewMode=='Home'?styles.overlayImage_home:styles.invisible}
+
+                      />
+                    </View>
                 </View>
             </GestureHandlerRootView>
+            <View style = {OriginalVisible? styles.toolBackground : styles.invisible}></View>
             <View style={[styles.toolBar, isDarkMode ? GlobalStyle.On_Surface_Disabled_Darker: {backgroundColor: '#dcdcdc'}]}>
                 <Medium_Buttons 
                   onPressFunction={resetHandler}
@@ -352,7 +429,7 @@ console.log(previewList);
 
         <RBSheet
             customStyles={{ 
-                container: [styles.RotateSheet, {backgroundColor: isDarkMode ? '#383838' : '#fff'}],
+                container: styles.RotateSheet,
                 wrapper: {
                     backgroundColor: "transparent"
                   }
@@ -394,6 +471,7 @@ console.log(previewList);
       flexDirection: 'column',
     },
     toolBar:{
+      zIndex:2,
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-evenly',
@@ -423,8 +501,9 @@ console.log(previewList);
         height: 692,
         borderRadius: 30,
         overflow: 'hidden', // Clip the image when it exceeds the frame
-        marginTop: -10,
-        marginBottom: 10
+        position: 'absolute',
+        Top: 76,
+        left: 35,
     },
     AllImgImageCard: {
       flex: 1,
@@ -611,14 +690,79 @@ console.log(previewList);
         flexShrink: 1,
         flexBasis: 0,
       },
-      overlayImage: {
+      overlayView: {
         position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
+        alignSelf: 'center',
+        
         
       },
+      overlayImage_lock: {
+        resizeMode: 'cover',
+        flex: 1,
+        height: 200,
+        width: 300,
+        opacity: lockVisible
+      },
+      overlayImage_home: {
+        resizeMode: 'cover',
+        flex: 1,
+        height: 280,
+        width: 280,
+        //opacity: homeVisible
+      },
+      modal2:{ // Modal Background
+        flex:1,
+        width: '100%',
+        alignItems:'center',
+        backgroundColor:'#888888',
+        //opacity:0.9
+      },
+      modal:{ // Modal
+        opacity:1,
+        width:'100%',
+        height:180,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:'#fff',
+      },
+      title:{
+        fontWeight: 'bold',
+        fontSize:23,
+        paddingTop: 40
+      },
+      button:{
+        // zIndex:1,
+        // position: 'absolute',
+        justifyContent: 'center',
+        height: 30,
+        width: '27%',
+        alignItems: 'center',
+        margin: 7,
+        borderRadius: 20,
+      },
+      madalbutton:{
+        flexDirection: 'row',
+        margin:10
+      },
+      buttonfont: {
+        color: '#ffffff'
+      },
+      invisible: {
+        opacity: 0,
+      },
+      toolBackground: {
+        zIndex: 9,
+        position:'absolute',
+        backgroundColor:'#dcdcdc',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        width: '100%',
+        top:800.5,
+        height: 70
+        }
+
   });
 
   /*
@@ -630,4 +774,16 @@ console.log(previewList);
                 <Text style={{color: 'black'}}> 10 </Text>
             </View>
 
+  */
+ //, {backgroundColor: isDarkMode ? '#383838' : '#fff'}
+
+ /*
+
+ <View style={styles.overlayView} >
+                      <Image 
+                        source={require('../../assets/img/lock_Bottom.png')}
+                        style={styles.overlayImage_lock}
+
+                      />
+                    </View>
   */

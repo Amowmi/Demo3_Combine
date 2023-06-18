@@ -67,6 +67,10 @@ const initFolder = {
 
 export function Folder(state = initFolder, action) {
     switch (action.type) {
+        case '@FOLDER/READ_STORED_FOLDER':
+            return {
+                ...action.storedData
+            }
         case '@FOLDER/ADD_FOLDER':
             if(action.folderName.length!==0){
                 var newFolderList = JSON.parse(JSON.stringify(state.folderList));
@@ -78,6 +82,9 @@ export function Folder(state = initFolder, action) {
 
                 };
             }; 
+            return{
+                ...state
+            }
         case '@FOLDER/SET_CURRENTFOLDER':
             // var newFolderList = JSON.parse(JSON.stringify(state.folderList));
             // console.log('action.id : ', action.id);
@@ -179,12 +186,12 @@ export function Folder(state = initFolder, action) {
 /* Preview */
 const initPreview = {
     currentPreview:'',
-    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}],
-                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'}]],
+    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg', date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}],
+                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}, 
+                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}, 
+                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg', date: '2023 / 06 / 16', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8}]],
     previewHasMore : true,
     previewLoading: false,
 };
@@ -192,6 +199,10 @@ const initPreview = {
 
 export function Preview(state = initPreview, action) {
     switch (action.type) {
+        case '@PREVIEW/READ_TORED_PREVIEW':
+            return {
+                ...action.storedData
+            }
         case '@PREVIEW/SET_CURRENTPREVIEW':
             return {
                 ...state,
@@ -225,7 +236,7 @@ export function Preview(state = initPreview, action) {
                     newFavorite[action.folderId][i].loved = true;
                 }
             }
-            newFavorite[0].push({loved: true, URL: action.URL, date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'});
+            newFavorite[0].push({loved: true, URL: action.URL, date: '2023 / 06 / 14', scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#C6B8FF'});
             return{
                 ...state,
                 previewList: newFavorite
@@ -250,7 +261,7 @@ export function Preview(state = initPreview, action) {
             d += DATE.getDate();
             //console.log(d);
             
-            newPreviewList[action.folderId].push({loved: false, URL: action.url, date: d, scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: '#e2e0dd'});
+            newPreviewList[action.folderId].push({loved: false, URL: action.url, date: d, scale_Edit: 1, positionX_Edit: 0, positionY_Edit: 0, isFlipped_Edit: false, distance_Edit: 0, ColorValue_Edit: 8});
             return{
                 ...state,
                 previewList: newPreviewList

@@ -1,14 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { StyleSheet, Text, View ,Pressable,SafeAreaView,FlatList,Modal,TouchableHighlight,TextInput, Alert} from 'react-native';
 import  ItemList from '../components/ItemList';
 import GlobalStyle from '../utils/GlobalStyle'
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
-import { setUserName,setCurFolder,setUserFolder } from '../actions/Actions';
+import { setUserName,setCurFolder,setUserFolder,readstoredFolder } from '../actions/Actions';
 import { addFolder, pushPreviewList } from '../actions/Actions';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppState } from 'react-native';
 
 import BackButton from '../components/Edit/backButton';
 
@@ -16,6 +17,7 @@ import BackButton from '../components/Edit/backButton';
 // const DATA = [
 //     {id:3},{id:4},{id:5},{id:0}
 //   ];
+
 
 
 const divdeToList = (folderList)=>{
@@ -49,10 +51,82 @@ const divdeToList = (folderList)=>{
 
 
 const FolderPage   = ()=>{
-    //const dispatch = useDispatch();
+    const [appState, setAppState] = useState(AppState.currentState);
     const dispatch = useDispatch();
+    const FOLDER = useSelector(state => state.Folder);
+
+      
+      // Call the function to store data
+      
+
+    useEffect(() => {
+        console.log('go store\n');
+        async function storeDataInStorage() {
+            try {
+              await AsyncStorage.setItem('folder',  JSON.stringify(FOLDER));
+              console.log('Data stored successfully');
+              console.log('folderdata');
+              console.log(JSON.stringify(FOLDER));
+            } catch (error) {
+              // Handle errors, if any
+              console.log('Error storing data:', error);
+            }
+        }
+        console.log('go store hahahaha\n');
+        // 监听 AppState 的状态变化
+        const handleAppStateChange = (nextAppState) => {
+          if (appState.match(/inactive|background/) && nextAppState === 'active') {
+            // App 从后台或非活动状态切换到活动状态
+            // 在这里保存数据到 async storage
+            storeDataInStorage();
+          } else if (nextAppState === 'background') {
+            console.log('inbackground\n');
+            // App 进入后台状态
+            // 在这里保存数据到 async storage
+            storeDataInStorage();
+          }
+          setAppState(nextAppState);
+        };
+        console.log('write here\n');
+      
+        // 添加 AppState 变化事件监听
+        AppState.addEventListener('change', handleAppStateChange);
+        console.log('dfosfosos\n');
+        // 清除事件监听器
+        // return () => {
+        //   AppState.removeEventListener('change', handleAppStateChange);
+        // };
+      }, [appState]);
+
+    useEffect(() => {
+        const storedfolders = async () => {
+        try {
+            const data = await AsyncStorage.getItem('folder');
+            // Handle the retrieved data
+            if (data) {
+            // Data exists in async storage
+            console.log('Retrieved data:', data);
+                dispatch(readstoredFolder(JSON.parse(data)));
+            // Further processing or updating state, if needed
+
+            } else {
+            // Data doesn't exist in async storage
+            console.log('No data found in async storage');
+            }
+        } catch (error) {
+            // Handle errors, if any
+            console.log('Error retrieving data:', error);
+        }
+        };
+
+        // Call the function to retrieve data during component mount
+        storedfolders();
+    }, []);
+    //const dispatch = useDispatch();
+
     
     const folderList = useSelector(state => state.Folder.folderList);
+    
     const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     const DATA = divdeToList(folderList);
     const [inputText, setInputText] = useState('');
@@ -82,6 +156,8 @@ const FolderPage   = ()=>{
         dispatch(setUserFolder(folderList));
         setIsOpen(!isOpen);
         setInputText('');
+        
+
     }
 
     const OnCancelPress = ()=>{

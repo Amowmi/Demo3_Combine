@@ -9,7 +9,7 @@ const totalPins=120;
 const Profile = () => {
     
   const userName = useSelector(state => state.account.userName);
-  console.log(userName);
+  //console.log(userName);
   const isDarkMode = useSelector(state => state.Mode.isDarkMode);
   
   return(

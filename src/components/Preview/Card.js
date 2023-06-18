@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     width: 166.43,
     height: 360,
     resizeMode: 'contain',
-    margin: 8,
+    marginRight: 8,
     marginTop: -15,
     marginBottom: 0,
     borderTopRightRadius: 8,
