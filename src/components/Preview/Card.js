@@ -36,6 +36,7 @@ const Card = (props) => {
       Alert.alert(error.message);
     }
   };
+  //console.log('date: ', props.date);
 
   const {isDarkMode,previewMode} = useSelector(state => state.Mode);
     return (
@@ -59,7 +60,7 @@ const Card = (props) => {
             </View>
             </View>
             <View style={styles.imageDescription}>
-              <Text style={[styles.imageDescriptionText, isDarkMode? GlobalStyle.Surface_dark_font:GlobalStyle.Primary_Linear_p_font]}> 2023 / 06 / 14    </Text>
+              <Text style={[styles.imageDescriptionText, isDarkMode? GlobalStyle.Surface_dark_font:GlobalStyle.Primary_Linear_p_font]}> {props.date}    </Text>
               <View style={styles.imageDescriptionIcon}>
                 <Heart loved={props.loved} URL ={props.URL} folder={props.folder} />
                 <SmallIconButton
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imageDescriptionText: {
-    fontSize: 7,
+    fontSize: 8.5,
     paddingTop:9,
     paddingLeft: 4 
   },

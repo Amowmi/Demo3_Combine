@@ -81,13 +81,22 @@ export function Folder(state = initFolder, action) {
                 currentFolder: action.id
             };
         case '@FOLDER/UPDATE_RECENTLY':
+            // 誰id對到action.id就要換到前面
             var newFolderList = JSON.parse(JSON.stringify(state.folderList));
+            var len = newFolderList.length;
+            var switchId = 1;
+            for(var i = 0; i < len; i++){
+                if(newFolderList[i].id == action.id){
+                    switchId = i;
+                    break;
+                }
+            } 
             if(action.id != 0){
                 var head = newFolderList[0];
                 console.log('head ', head);
-                var recent = newFolderList[action.id];
+                var recent = newFolderList[switchId];
                 console.log('recent ', recent);
-                newFolderList.splice(action.id, 1);
+                newFolderList.splice(switchId, 1);
                 newFolderList.splice(0, 1);
                 newFolderList.unshift(recent);
                 newFolderList.unshift(head);
@@ -100,8 +109,16 @@ export function Folder(state = initFolder, action) {
             };
         case '@FOLDER/CHECK_FOLDER_EMPTY':
             var newFolderList = JSON.parse(JSON.stringify(state.folderList));
-            if(state.folderList[action.folderId].image == 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1280px-HD_transparent_picture.png'){
-                newFolderList[action.folderId].image = action.url;
+            var len = newFolderList.length;
+            var chosenId = 1;
+            for(var i = 0; i < len; i++){
+                if(newFolderList[i].id == action.id){
+                    chosenId = i;
+                    break;
+                }
+            } 
+            if(state.folderList[chosenId].image == 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1280px-HD_transparent_picture.png'){
+                newFolderList[chosenId].image = action.url;
                 
             }
             return{
@@ -146,12 +163,12 @@ export function Folder(state = initFolder, action) {
 /* Preview */
 const initPreview = {
     currentPreview:'',
-    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}, 
-                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg'}],
-                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg'}, 
-                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg'}]],
+    previewList: [[{loved: true, URL: 'https://i.pinimg.com/564x/f3/6d/6d/f36d6d18240ccae47ad3932c9935ea2d.jpg', date: '2023 / 06 / 14'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 14'}, 
+                   {loved: true, URL: 'https://i.pinimg.com/564x/8b/5d/88/8b5d883efedaae6db53519d5327ffb57.jpg', date: '2023 / 06 / 14'}],
+                   [{loved: false, URL: 'https://i.pinimg.com/564x/8b/c3/50/8bc3508f9b6b2ae990b4b15b0ffe14bb.jpg', date: '2023 / 06 / 16'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/736x/04/94/86/04948650402abec7620dab8e458fdd37.jpg', date: '2023 / 06 / 16'}, 
+                   {loved: false, URL: 'https://i.pinimg.com/564x/27/9c/9b/279c9bbdc613979ad32879cf5e5772e9.jpg', date: '2023 / 06 / 16'}]],
     previewHasMore : true,
     previewLoading: false,
 };
@@ -208,8 +225,16 @@ export function Preview(state = initPreview, action) {
         
         case '@PREVIEW/ADD_IMAGE_TO_FOLDER':
             var newPreviewList = JSON.parse(JSON.stringify(state.previewList));
+            const DATE = new Date();
+            var d = '';
+            d += DATE.getFullYear();
+            d += ' / ';
+            d += DATE.getMonth() + 1;
+            d += ' / ';
+            d += DATE.getDate();
+            //console.log(d);
             
-            newPreviewList[action.folderId].push({loved: false, URL: action.url});
+            newPreviewList[action.folderId].push({loved: false, URL: action.url, date: d});
             return{
                 ...state,
                 previewList: newPreviewList

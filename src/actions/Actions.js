@@ -62,6 +62,7 @@ export function updateRecently(id){
         id : id
     }
 }
+
 export function setCurPreview(url){
     return{
         type: '@PREVIEW/SET_CURRENTPREVIEW',

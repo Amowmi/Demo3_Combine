@@ -10,15 +10,18 @@ import { useSelector } from 'react-redux';
 
 const FolderItem   = (props)=>{
     const navigation = useNavigation();
+    const folderList = useSelector(state => state.Folder.folderList);
     const dispatch = useDispatch();
     const navigateHandler = () => {
-        // var i = 0;
-        // if(props.data.id > 0){
-        //     i = 1;
-        // }
-        //dispatch(updateRecently(props.data.id));
+        var i = 0;
+        if(props.data.id > 0){
+            i = 1;
+        }
+        //  是選了folderList中的第[props.data.id]個
+        console.log('chose the ', props.data.id, 'item in folderList');
+        console.log('the id of the chosen : ', folderList[props.data.id].id);
         dispatch(setCurFolder(props.data.id));
-        console.log('current id : ', props.data.id);
+        dispatch(updateRecently(props.data.id));
         navigation.navigate('PreviewScreen');
     };
     const image = props.data.image;

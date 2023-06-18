@@ -118,7 +118,7 @@ export default function PreviewScreen(){
             keyExtractor={(item,cardURL)=>cardURL}
             data={CARD} numColumns={2}  
             columnWrapperStyle={{justifyContent:'space-between', paddingHorizontal:20}}
-            renderItem={({item}) => <Card URL={item.URL} loved={item.loved} folder={currentFolder}  style={{flex: 0.5}}/> } />
+            renderItem={({item}) => <Card URL={item.URL} loved={item.loved} folder={currentFolder} date={item.date} style={{flex: 0.5}}/> } />
         </SafeAreaView>
         {currentFolder===0?null:<View style={styles.plus}>
               <Icon_Button
